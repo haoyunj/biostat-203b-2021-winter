@@ -42,6 +42,9 @@ sessionInfo()
 
 1. This exercise (and later in this course) uses the [MIMIC-IV data](https://mimic-iv.mit.edu), a freely accessible critical care database developed by the MIT Lab for Computational Physiology. Follow the instructions at <https://mimic-iv.mit.edu/docs/access/> to (1) complete the CITI `Data or Specimens Only Research` course and (2) obtain the PhysioNet credential for using the MIMIC-IV data. Display the verification links to your completion report and completion certificate here. (Hint: The CITI training takes a couple hours and the PhysioNet credentialing takes a couple days; do not leave it to the last minute.)
 
+***Solution:*** Here is my [course completion report](citiprogram.org/verify/?k56a4b649-41eb-4528-b8a7-6ffd98d72e23-40373337)
+Here is my [course completion report](citiprogram.org/verify/?w4bf2d202-74ae-4ed7-a449-49b6a9b7e2ed-40373337)
+
 2. The `/usr/203b-data/mimic-iv/` folder on teaching server contains data sets from MIMIC-IV. Refer to <https://mimic-iv.mit.edu/docs/datasets/> for details of data files.  
     ```{bash}
     ls -l /usr/203b-data/mimic-iv
@@ -51,17 +54,42 @@ Please, do **not** put these data files into Git; they are big. Do **not** copy 
     Use Bash commands to answer following questions.
 
 3. Display the contents in the folders `core`, `hosp`, `icu`. What are the functionalities of the bash commands `zcat`, `zless`, `zmore`, and `zgrep`? 
-
+```{bash}
+    ls  /usr/203b-data/mimic-iv/core
+```
+```{bash}
+    ls  /usr/203b-data/mimic-iv/hosp
+```
+```{bash}
+    ls  /usr/203b-data/mimic-iv/icu
+```
+```{bash}
+    ls  /usr/203b-data/mimic-iv/core
+```
+***Solutions:***`zcat`, `zless`, `zmore`, and `zgrep` have the same function of `cat`,`less`,`more`and`grep` to the zipped files.
+`zcat` is a command for viewing the contents of a compressed file without literally uncompressing it.
+`zmore`browses a text file screen by screen without literally uncompressing it.
+`zless`is also a pager, but has more functionalities, e.g., scroll upwards and downwards through the input without literally uncompressing it.
+`zgrep`prints lines that match an expression without literally uncompressing it.
 4. What's the output of following bash script?
-    ```{bash, eval=F}
+    ```{bash}
     for datafile in /usr/203b-data/mimic-iv/core/*.gz
       do
         ls -l $datafile
       done
     ```
 Display the number of lines in each data file using a similar loop.
-
+    ```{bash}
+    for datafile in /usr/203b-data/mimic-iv/core/*.gz
+      do
+        wc -l $datafile
+      done
+    ```
+    
 4. Display the first few lines of `admissions.csv.gz`. How many rows are in this data file? How many unique patients (identified by `subject_id`) are in this data file? What are the possible values taken by each of the variable `admission_type`, `admission_location`, `insurance`, `language`, `marital_status`, and `ethnicity`? Also report the count for each unique value of these variables. (Hint: combine Linux commands `zcat`, `head`/`tail`, `awk`, `uniq`, `wc`, and so on.)
+    ```{bash}
+    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|wc-l
+    ```
 
 ## Q3. Who's popular in Price and Prejudice
 
@@ -80,6 +108,7 @@ Do **not** put this text file `pride_and_prejudice.txt` in Git. Using a `for` lo
     echo 'hello, world' >> test2.txt
     ```
 
+
 3. Using your favorite text editor (e.g., `vi`), type the following and save the file as `middle.sh`:
     ```{bash eval=FALSE}
     #!/bin/sh
@@ -97,11 +126,23 @@ Explain the output. Explain the meaning of `"$1"`, `"$2"`, and `"$3"` in this sh
 
 Try these commands in Bash and interpret the results: `cal`, `cal 2021`, `cal 9 1752` (anything unusual?), `date`, `hostname`, `arch`, `uname -a`, `uptime`, `who am i`, `who`, `w`, `id`, `last | head`, `echo {con,pre}{sent,fer}{s,ed}`, `time sleep 5`, `history | tail`.
 
-**Solution:**`cal` displays a calendar of current month
+**Solution:**`cal` displays a calendar of current month:
 ```{bash}
 cal
 ```
-`cal 2021` displays a calendar of 2021
+`cal 2021` displays a calendar of 2021:
 ```{bash}
 cal 2021
+```
+`cal 9 1752` displays a calendar of Sep of 1752:
+```{bash}
+cal 9 1752
+```
+`date` displays date of the system:
+```{bash}
+date
+```
+`hostname` displays the hostname of system:
+```{bash}
+hostname
 ```
