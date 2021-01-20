@@ -82,35 +82,103 @@ Display the number of lines in each data file using a similar loop.
     ```{bash}
     for datafile in /usr/203b-data/mimic-iv/core/*.gz
       do
-        wc -l $datafile
+         zcat $datafile | wc -l
       done
     ```
     
 4. Display the first few lines of `admissions.csv.gz`. How many rows are in this data file? How many unique patients (identified by `subject_id`) are in this data file? What are the possible values taken by each of the variable `admission_type`, `admission_location`, `insurance`, `language`, `marital_status`, and `ethnicity`? Also report the count for each unique value of these variables. (Hint: combine Linux commands `zcat`, `head`/`tail`, `awk`, `uniq`, `wc`, and so on.)
+***Solutions:***
+1.Display the first few lines of `admissions.csv.gz`.
     ```{bash}
-    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|wc-l
+    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|head
     ```
+
+2.Rows in datafile
+    ```{bash}
+    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|wc -l
+    ```
+3.# of unique patients
+    ```{bash}
+    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $1 }'|sort|uniq|wc -l
+    ```   
+4.possible values and # of values taken by  `admission_type`
+    ```{bash}
+    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $6 }'|sort|uniq
+    ``` 
+    
+    ```{bash}
+    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $6 }'|sort|uniq|wc -l
+    ```  
+5.possible values and # of values taken by  `admission_location`
+    ```{bash}
+    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $7 }'|sort|uniq
+    ``` 
+    
+    ```{bash}
+    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $7 }'|sort|uniq|wc -l
+    ```  
+6.possible values and # of values taken by `insurance`
+    ```{bash}
+    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $9 }'|sort|uniq
+    ```  
+    
+    ```{bash}
+    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $9 }'|sort|uniq|wc -l
+    ```  
+7.possible values and # of values taken by `language`
+    ```{bash}
+    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $10 }'|sort|uniq 
+    ```  
+    
+    ```{bash}
+    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $10 }'|sort|uniq|wc -l
+    ```  
+8.possible values and # of values taken by `marital_status`
+    ```{bash}
+    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $11 }'|sort|uniq 
+    ```  
+    
+    ```{bash}
+    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $11 }'|sort|uniq|wc -l
+    ```  
+9.possible values and # of values taken by `ethnicity `  
+    ```{bash}
+    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $12 }'|sort|uniq 
+    ```  
+    
+    ```{bash}
+    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $12 }'|sort|uniq|wc -l
+    ```  
 
 ## Q3. Who's popular in Price and Prejudice
 
 1. You and your friend just have finished reading *Pride and Prejudice* by Jane Austen. Among the four main characters in the book, Elizabeth, Jane, Lydia, and Darcy, your friend thinks that Darcy was the most mentioned. You, however, are certain it was Elizabeth. Obtain the full text of the novel from <http://www.gutenberg.org/cache/epub/42671/pg42671.txt> and save to your local folder. 
-    ```{bash, eval=FALSE}
+    ```{bash}
     curl http://www.gutenberg.org/cache/epub/42671/pg42671.txt > pride_and_prejudice.txt
     ```
+    
 Do **not** put this text file `pride_and_prejudice.txt` in Git. Using a `for` loop, how would you tabulate the number of times each of the four characters is mentioned?
+    ```{bash}
+  for names in  Elizabeth Jane Lydia Darcy
+  do 
+     grep -c $names pride_and_prejudice.txt
+  done
+    ``` 
 
 2. What's the difference between the following two commands?
-    ```{bash eval=FALSE}
+    ```{bash}
     echo 'hello, world' > test1.txt
     ```
     and
-    ```{bash eval=FALSE}
+    ```{bash}
     echo 'hello, world' >> test2.txt
     ```
-
+***Solutions:***
+**>** directs 'hello world' output to the file.
+**>>** appends 'hello world' to the file. 
 
 3. Using your favorite text editor (e.g., `vi`), type the following and save the file as `middle.sh`:
-    ```{bash eval=FALSE}
+    ```{bash}
     #!/bin/sh
     # Select lines from the middle of a file.
     # Usage: bash middle.sh filename end_line num_lines
@@ -145,4 +213,48 @@ date
 `hostname` displays the hostname of system:
 ```{bash}
 hostname
+```
+`arch` displays the hardware configuratione of system:
+```{bash}
+arch
+```
+`uname -a` displays the name of system,node name, operating system release number, core version
+```{bash}
+uname -a
+```
+`uptime` displays the uptime,user,load average:
+```{bash}
+uptime
+```
+`who am i` displays :
+```{bash}
+who am i
+```
+`who` displays :
+```{bash}
+who
+```
+`w` displays uptime,user who has logged in and their information :
+```{bash}
+w
+```
+`id` displays the uid,gid,groups,context:
+```{bash}
+id
+```
+`last | head` displays the latest 10 logged user and their information:
+```{bash}
+last | head
+```
+`echo {con,pre}{sent,fer}{s,ed}` displays different combinations of the part of the words:
+```{bash}
+echo {con,pre}{sent,fer}{s,ed}
+```
+`time sleep 5` displays the time used for real,user,sys to sleep 5 seconds:
+```{bash}
+time sleep 5
+```
+`history | tail` displays the history of commands:
+```{bash}
+history | tail
 ```
