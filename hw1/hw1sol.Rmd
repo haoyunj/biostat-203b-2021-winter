@@ -55,16 +55,16 @@ Please, do **not** put these data files into Git; they are big. Do **not** copy 
 
 3. Display the contents in the folders `core`, `hosp`, `icu`. What are the functionalities of the bash commands `zcat`, `zless`, `zmore`, and `zgrep`? 
 ```{bash}
-    ls  /usr/203b-data/mimic-iv/core
+ls  /usr/203b-data/mimic-iv/core
 ```
 ```{bash}
-    ls  /usr/203b-data/mimic-iv/hosp
+ls  /usr/203b-data/mimic-iv/hosp
 ```
 ```{bash}
-    ls  /usr/203b-data/mimic-iv/icu
+ls  /usr/203b-data/mimic-iv/icu
 ```
 ```{bash}
-    ls  /usr/203b-data/mimic-iv/core
+ls  /usr/203b-data/mimic-iv/core
 ```
 ***Solutions:***`zcat`, `zless`, `zmore`, and `zgrep` have the same function of `cat`,`less`,`more`and`grep` to the zipped files.
 `zcat` is a command for viewing the contents of a compressed file without literally uncompressing it.
@@ -92,7 +92,6 @@ Display the number of lines in each data file using a similar loop.
     ```{bash}
     zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|head
     ```
-
 2.Rows in datafile
     ```{bash}
     zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|wc -l
@@ -159,10 +158,10 @@ Display the number of lines in each data file using a similar loop.
     
 Do **not** put this text file `pride_and_prejudice.txt` in Git. Using a `for` loop, how would you tabulate the number of times each of the four characters is mentioned?
     ```{bash}
-  for names in  Elizabeth Jane Lydia Darcy
-  do 
+    for names in  Elizabeth Jane Lydia Darcy
+    do 
      grep -c $names pride_and_prejudice.txt
-  done
+    done
     ``` 
 
 2. What's the difference between the following two commands?
@@ -178,7 +177,8 @@ Do **not** put this text file `pride_and_prejudice.txt` in Git. Using a `for` lo
 **>>** appends 'hello world' to the file. 
 
 3. Using your favorite text editor (e.g., `vi`), type the following and save the file as `middle.sh`:
-    ```{bash}
+    ```{bash eval=FALSE}
+    vi middle.sh
     #!/bin/sh
     # Select lines from the middle of a file.
     # Usage: bash middle.sh filename end_line num_lines
@@ -189,12 +189,18 @@ Using `chmod` make the file executable by the owner, and run
     ./middle.sh pride_and_prejudice.txt 20 5
     ```
 Explain the output. Explain the meaning of `"$1"`, `"$2"`, and `"$3"` in this shell script. Why do we need the first line of the shell script?
+***OUTPUT:***
+Author: Jane Austen
 
+Editor: R. W. (Robert William) Chapman
+The first line told the system to explain the script by bash shell.
+`"$1"`, `"$2"`, and `"$3"` are the positional variables which means the first,second and the third parameter.
 ### Q4. More fun with Linux
 
 Try these commands in Bash and interpret the results: `cal`, `cal 2021`, `cal 9 1752` (anything unusual?), `date`, `hostname`, `arch`, `uname -a`, `uptime`, `who am i`, `who`, `w`, `id`, `last | head`, `echo {con,pre}{sent,fer}{s,ed}`, `time sleep 5`, `history | tail`.
 
-**Solution:**`cal` displays a calendar of current month:
+**Solution:**
+`cal` displays a calendar of current month:
 ```{bash}
 cal
 ```
@@ -228,7 +234,7 @@ uptime
 ```
 `who am i` displays :
 ```{bash}
-who am i
+whoami
 ```
 `who` displays :
 ```{bash}
