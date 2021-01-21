@@ -606,8 +606,8 @@ for datafile in /usr/203b-data/mimic-iv/core/*.gz
 ##                                  Dload  Upload   Total   Spent    Left  Speed
 ## 
  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
- 6  708k    6 46177    0     0  97627      0  0:00:07 --:--:--  0:00:07 97625
-100  708k  100  708k    0     0   580k      0  0:00:01  0:00:01 --:--:--  580k</code></pre></li>
+26  708k   26  186k    0     0   243k      0  0:00:02 --:--:--  0:00:02  243k
+100  708k  100  708k    0     0   583k      0  0:00:01  0:00:01 --:--:--  584k</code></pre></li>
 </ol>
 <p>Do <strong>not</strong> put this text file <code>pride_and_prejudice.txt</code> in Git. Using a <code>for</code> loop, how would you tabulate the number of times each of the four characters is mentioned?</p>
 <pre><code>```bash
@@ -696,7 +696,7 @@ head -n &quot;$2&quot; &quot;$1&quot; | tail -n &quot;$3&quot;</code></pre>
 ## 24 25 26 27 28 29 30</code></pre>
 <p><code>date</code> displays date of the system:</p>
 <pre class="bash"><code>date</code></pre>
-<pre><code>## Thu Jan 21 05:49:42 UTC 2021</code></pre>
+<pre><code>## Thu Jan 21 12:32:34 UTC 2021</code></pre>
 <p><code>hostname</code> displays the hostname of system:</p>
 <pre class="bash"><code>hostname</code></pre>
 <pre><code>## ucla-biostat-203b</code></pre>
@@ -708,44 +708,44 @@ head -n &quot;$2&quot; &quot;$1&quot; | tail -n &quot;$3&quot;</code></pre>
 <pre><code>## Linux ucla-biostat-203b 3.10.0-1160.6.1.el7.x86_64 #1 SMP Tue Nov 17 13:59:11 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux</code></pre>
 <p><code>uptime</code> displays the uptime,user,load average:</p>
 <pre class="bash"><code>uptime</code></pre>
-<pre><code>##  05:49:42 up 17 days,  8:00,  2 users,  load average: 0.78, 0.27, 0.18</code></pre>
+<pre><code>##  12:32:34 up 17 days, 14:43,  2 users,  load average: 0.35, 0.12, 0.07</code></pre>
 <p><code>who am i</code> displays :</p>
 <pre class="bash"><code>whoami</code></pre>
 <pre><code>## haoyunj</code></pre>
 <p><code>who</code> displays :</p>
 <pre class="bash"><code>who</code></pre>
-<pre><code>## valentina214 pts/4        2021-01-21 04:57 (47.156.178.126)
-## linyuzhou pts/5        2021-01-21 05:32 (s-169-232-70-224.resnet.ucla.edu)</code></pre>
+<pre><code>## haoyunj  pts/0        2021-01-21 12:27 (101.93.71.50)
+## filipovicmilan271 pts/7        2021-01-21 06:03 (110.3.236.35.bc.googleusercontent.com)</code></pre>
 <p><code>w</code> displays uptime,user who has logged in and their information :</p>
 <pre class="bash"><code>w</code></pre>
-<pre><code>##  05:49:42 up 17 days,  8:00,  2 users,  load average: 0.78, 0.27, 0.18
+<pre><code>##  12:32:34 up 17 days, 14:43,  2 users,  load average: 0.35, 0.12, 0.07
 ## USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
-## valentin pts/4    47.156.178.126   04:57   50:06   0.02s  0.02s -bash
-## linyuzho pts/5    s-169-232-70-224 05:32   16:44   0.01s  0.01s -bash</code></pre>
+## haoyunj  pts/0    101.93.71.50     12:27    4:54   0.06s  0.06s -bash
+## filipovi pts/7    110.3.236.35.bc. 06:03    6:23m  0.06s  0.06s -bash</code></pre>
 <p><code>id</code> displays the uid,gid,groups,context:</p>
 <pre class="bash"><code>id</code></pre>
 <pre><code>## uid=1016(haoyunj) gid=1018(haoyunj) groups=1018(haoyunj) context=system_u:system_r:initrc_t:s0</code></pre>
 <p><code>last | head</code> displays the latest 10 logged user and their information:</p>
 <pre class="bash"><code>last | head</code></pre>
-<pre><code>## linyuzho pts/5        s-169-232-70-224 Thu Jan 21 05:32   still logged in   
+<pre><code>## haoyunj  pts/0        101.93.71.50     Thu Jan 21 12:27   still logged in   
+## valentin pts/4        47.156.178.126   Thu Jan 21 06:17 - 06:29  (00:12)    
+## filipovi pts/7        110.3.236.35.bc. Thu Jan 21 06:03   still logged in   
+## linyuzho pts/5        s-169-232-70-224 Thu Jan 21 05:32 - 06:35  (01:02)    
 ## kmishimo pts/6        ip174-67-246-239 Thu Jan 21 05:00 - 05:32  (00:32)    
 ## haoyunj  pts/5        101.93.71.50     Thu Jan 21 04:59 - 05:04  (00:04)    
-## valentin pts/4        47.156.178.126   Thu Jan 21 04:57   still logged in   
+## valentin pts/4        47.156.178.126   Thu Jan 21 04:57 - 06:15  (01:18)    
 ## kmishimo pts/4        ip174-67-246-239 Thu Jan 21 04:35 - 04:53  (00:18)    
 ## haoyunj  pts/1        101.93.71.50     Thu Jan 21 04:33 - 05:15  (00:41)    
-## haoyunj  pts/1        101.93.71.50     Thu Jan 21 04:31 - 04:33  (00:02)    
-## haoyunj  pts/4        101.93.71.50     Thu Jan 21 04:22 - 04:29  (00:07)    
-## kmishimo pts/1        ip174-67-246-239 Thu Jan 21 04:15 - 04:26  (00:10)    
-## asburyse pts/4        c-67-171-189-1.h Thu Jan 21 02:05 - 03:04  (00:58)</code></pre>
+## haoyunj  pts/1        101.93.71.50     Thu Jan 21 04:31 - 04:33  (00:02)</code></pre>
 <p><code>echo {con,pre}{sent,fer}{s,ed}</code> displays different combinations of the part of the words:</p>
 <pre class="bash"><code>echo {con,pre}{sent,fer}{s,ed}</code></pre>
 <pre><code>## consents consented confers confered presents presented prefers prefered</code></pre>
 <p><code>time sleep 5</code> displays the time used for real,user,sys to sleep 5 seconds:</p>
 <pre class="bash"><code>time sleep 5</code></pre>
 <pre><code>## 
-## real 0m5.002s
+## real 0m5.005s
 ## user 0m0.000s
-## sys  0m0.002s</code></pre>
+## sys  0m0.003s</code></pre>
 <p><code>history | tail</code> displays the history of commands:</p>
 <pre class="bash"><code>history | tail</code></pre>
 </div>
