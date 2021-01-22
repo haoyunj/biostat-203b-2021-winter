@@ -508,7 +508,7 @@ for datafile in /usr/203b-data/mimic-iv/core/*.gz
 ## 2192964
 ```</code></pre>
 <ol start="4" style="list-style-type: decimal">
-<li><p>Display the first few lines of <code>admissions.csv.gz</code>. How many rows are in this data file? How many unique patients (identified by <code>subject_id</code>) are in this data file? What are the possible values taken by each of the variable <code>admission_type</code>, <code>admission_location</code>, <code>insurance</code>, <code>language</code>, <code>marital_status</code>, and <code>ethnicity</code>? Also report the count for each unique value of these variables. (Hint: combine Linux commands <code>zcat</code>, <code>head</code>/<code>tail</code>, <code>awk</code>, <code>uniq</code>, <code>wc</code>, and so on.) <strong><em>Solutions:</em></strong> 1.Display the first few lines of <code>admissions.csv.gz</code>.</p>
+<li><p>Display the first few lines of <code>admissions.csv.gz</code>. How many rows are in this data file? How many unique patients (identified by <code>subject_id</code>) are in this data file? What are the possible values taken by each of the variable <code>admission_type</code>, <code>admission_location</code>, <code>insurance</code>, <code>language</code>, <code>marital_status</code>, and <code>ethnicity</code>? Also report the count for each unique value of these variables. (Hint: combine Linux commands <code>zcat</code>, <code>head</code>/<code>tail</code>, <code>awk</code>, <code>uniq</code>, <code>wc</code>, and so on.) <strong><em>Solutions:</em></strong>1.Display the first few lines of <code>admissions.csv.gz</code>.</p>
 <pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|head</code></pre>
 <pre><code>## subject_id,hadm_id,admittime,dischtime,deathtime,admission_type,admission_location,discharge_location,insurance,language,marital_status,ethnicity,edregtime,edouttime,hospital_expire_flag
 ## 12427812,21593330,2184-01-06 11:51:00,2184-01-10 11:45:00,,URGENT,PHYSICIAN REFERRAL,HOME,Other,ENGLISH,,UNKNOWN,,,0
@@ -524,77 +524,59 @@ for datafile in /usr/203b-data/mimic-iv/core/*.gz
 <pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|wc -l</code></pre>
 <pre><code>## 524521</code></pre>
 <p>3.# of unique patients</p>
-<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $1 }&#39;|sort|uniq|wc -l</code></pre>
-<pre><code>## 257367</code></pre>
+<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $1 }&#39;|sort|tail -n+2|awk &#39;END{print NR}&#39;|uniq</code></pre>
+<pre><code>## 524520</code></pre>
 <p>4.possible values and # of values taken by <code>admission_type</code></p>
-<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $6 }&#39;|sort|uniq</code></pre>
-<pre><code>## admission_type
-## AMBULATORY OBSERVATION
-## DIRECT EMER.
-## DIRECT OBSERVATION
-## ELECTIVE
-## EU OBSERVATION
-## EW EMER.
-## OBSERVATION ADMIT
-## SURGICAL SAME DAY ADMISSION
-## URGENT</code></pre>
-<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $6 }&#39;|sort|uniq|wc -l</code></pre>
-<pre><code>## 10</code></pre>
+<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $6 }&#39;|sort|uniq -c|tail -n+2</code></pre>
+<pre><code>##    7259 AMBULATORY OBSERVATION
+##   21595 DIRECT EMER.
+##   20014 DIRECT OBSERVATION
+##   72077 ELECTIVE
+##  100938 EU OBSERVATION
+##  158032 EW EMER.
+##   55532 OBSERVATION ADMIT
+##   41103 SURGICAL SAME DAY ADMISSION
+##   47970 URGENT</code></pre>
 <p>5.possible values and # of values taken by <code>admission_location</code></p>
-<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $7 }&#39;|sort|uniq</code></pre>
-<pre><code>## 
-## admission_location
-## AMBULATORY SURGERY TRANSFER
-## CLINIC REFERRAL
-## EMERGENCY ROOM
-## INFORMATION NOT AVAILABLE
-## INTERNAL TRANSFER TO OR FROM PSYCH
-## PACU
-## PHYSICIAN REFERRAL
-## PROCEDURE SITE
-## TRANSFER FROM HOSPITAL
-## TRANSFER FROM SKILLED NURSING FACILITY
-## WALK-IN/SELF REFERRAL</code></pre>
-<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $7 }&#39;|sort|uniq|wc -l</code></pre>
-<pre><code>## 13</code></pre>
+<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $7 }&#39;|sort|uniq -c|tail -n+2</code></pre>
+<pre><code>##       1 admission_location
+##     191 AMBULATORY SURGERY TRANSFER
+##   10678 CLINIC REFERRAL
+##  246241 EMERGENCY ROOM
+##     379 INFORMATION NOT AVAILABLE
+##    4484 INTERNAL TRANSFER TO OR FROM PSYCH
+##    6075 PACU
+##  127648 PHYSICIAN REFERRAL
+##    8453 PROCEDURE SITE
+##   39150 TRANSFER FROM HOSPITAL
+##    4069 TRANSFER FROM SKILLED NURSING FACILITY
+##   16715 WALK-IN/SELF REFERRAL</code></pre>
 <p>6.possible values and # of values taken by <code>insurance</code></p>
-<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $9 }&#39;|sort|uniq</code></pre>
-<pre><code>## insurance
-## Medicaid
-## Medicare
-## Other</code></pre>
-<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $9 }&#39;|sort|uniq|wc -l</code></pre>
-<pre><code>## 4</code></pre>
+<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $9 }&#39;|sort|uniq -c|tail -n+2</code></pre>
+<pre><code>##   50962 Medicaid
+##  171492 Medicare
+##  302066 Other</code></pre>
 <p>7.possible values and # of values taken by <code>language</code></p>
-<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $10 }&#39;|sort|uniq </code></pre>
-<pre><code>## ?
-## ENGLISH
-## language</code></pre>
-<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $10 }&#39;|sort|uniq|wc -l</code></pre>
-<pre><code>## 3</code></pre>
+<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $10 }&#39;|sort|uniq -c|tail -n+2</code></pre>
+<pre><code>##  478289 ENGLISH
+##       1 language</code></pre>
 <p>8.possible values and # of values taken by <code>marital_status</code></p>
-<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $11 }&#39;|sort|uniq </code></pre>
-<pre><code>## 
-## DIVORCED
-## marital_status
-## MARRIED
-## SINGLE
-## WIDOWED</code></pre>
-<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $11 }&#39;|sort|uniq|wc -l</code></pre>
-<pre><code>## 6</code></pre>
+<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $11 }&#39;|sort|uniq -c|tail -n+2</code></pre>
+<pre><code>##   33762 DIVORCED
+##       1 marital_status
+##  195326 MARRIED
+##  180453 SINGLE
+##   48846 WIDOWED</code></pre>
 <p>9.possible values and # of values taken by <code>ethnicity</code></p>
-<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $12 }&#39;|sort|uniq </code></pre>
-<pre><code>## AMERICAN INDIAN/ALASKA NATIVE
-## ASIAN
-## BLACK/AFRICAN AMERICAN
-## ethnicity
-## HISPANIC/LATINO
-## OTHER
-## UNABLE TO OBTAIN
-## UNKNOWN
-## WHITE</code></pre>
-<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $12 }&#39;|sort|uniq|wc -l</code></pre>
-<pre><code>## 9</code></pre></li>
+<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $12 }&#39;|sort|uniq -c|tail -n+2</code></pre>
+<pre><code>##   24522 ASIAN
+##   80526 BLACK/AFRICAN AMERICAN
+##       1 ethnicity
+##   29887 HISPANIC/LATINO
+##   26844 OTHER
+##    3742 UNABLE TO OBTAIN
+##   19419 UNKNOWN
+##  338044 WHITE</code></pre></li>
 </ol>
 </div>
 <div id="q3.-whos-popular-in-price-and-prejudice" class="section level2">
@@ -606,8 +588,8 @@ for datafile in /usr/203b-data/mimic-iv/core/*.gz
 ##                                  Dload  Upload   Total   Spent    Left  Speed
 ## 
  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
- 5  708k    5 39137    0     0  75415      0  0:00:09 --:--:--  0:00:09 75408
-100  708k  100  708k    0     0   500k      0  0:00:01  0:00:01 --:--:--  501k</code></pre></li>
+72  708k   72  509k    0     0   531k      0  0:00:01 --:--:--  0:00:01  531k
+100  708k  100  708k    0     0   646k      0  0:00:01  0:00:01 --:--:--  647k</code></pre></li>
 </ol>
 <p>Do <strong>not</strong> put this text file <code>pride_and_prejudice.txt</code> in Git. Using a <code>for</code> loop, how would you tabulate the number of times each of the four characters is mentioned?</p>
 <pre><code>```bash
@@ -639,7 +621,7 @@ head -n &quot;$2&quot; &quot;$1&quot; | tail -n &quot;$3&quot;</code></pre>
 <pre class="bash"><code>./middle.sh pride_and_prejudice.txt 20 5</code></pre>
 <p>Explain the output. Explain the meaning of <code>&quot;$1&quot;</code>, <code>&quot;$2&quot;</code>, and <code>&quot;$3&quot;</code> in this shell script. Why do we need the first line of the shell script? <strong><em>OUTPUT:</em></strong> Author: Jane Austen</p></li>
 </ol>
-<p>Editor: R. W. (Robert William) Chapman The first line told the system to explain the script by bash shell. <code>&quot;$1&quot;</code>, <code>&quot;$2&quot;</code>, and <code>&quot;$3&quot;</code> are the positional variables which means the first,second and the third parameter. ### Q4. More fun with Linux</p>
+<p>Editor: R. W. (Robert William) Chapman The first line told the system to explain the script by bash shell. <code>&quot;$1&quot;</code>, <code>&quot;$2&quot;</code>, and <code>&quot;$3&quot;</code> are the positional variables which means the first,second and the third parameter. So the output is result of the command “head -n 20 pride_and_prejudice.txt | tail-n 5”. ### Q4. More fun with Linux</p>
 <p>Try these commands in Bash and interpret the results: <code>cal</code>, <code>cal 2021</code>, <code>cal 9 1752</code> (anything unusual?), <code>date</code>, <code>hostname</code>, <code>arch</code>, <code>uname -a</code>, <code>uptime</code>, <code>who am i</code>, <code>who</code>, <code>w</code>, <code>id</code>, <code>last | head</code>, <code>echo {con,pre}{sent,fer}{s,ed}</code>, <code>time sleep 5</code>, <code>history | tail</code>.</p>
 <p><strong>Solution:</strong> <code>cal</code> displays a calendar of current month:</p>
 <pre class="bash"><code>cal</code></pre>
@@ -696,7 +678,7 @@ head -n &quot;$2&quot; &quot;$1&quot; | tail -n &quot;$3&quot;</code></pre>
 ## 24 25 26 27 28 29 30</code></pre>
 <p><code>date</code> displays date of the system:</p>
 <pre class="bash"><code>date</code></pre>
-<pre><code>## Thu Jan 21 23:17:50 UTC 2021</code></pre>
+<pre><code>## Fri Jan 22 00:42:48 UTC 2021</code></pre>
 <p><code>hostname</code> displays the hostname of system:</p>
 <pre class="bash"><code>hostname</code></pre>
 <pre><code>## ucla-biostat-203b</code></pre>
@@ -708,35 +690,43 @@ head -n &quot;$2&quot; &quot;$1&quot; | tail -n &quot;$3&quot;</code></pre>
 <pre><code>## Linux ucla-biostat-203b 3.10.0-1160.6.1.el7.x86_64 #1 SMP Tue Nov 17 13:59:11 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux</code></pre>
 <p><code>uptime</code> displays the uptime,user,load average:</p>
 <pre class="bash"><code>uptime</code></pre>
-<pre><code>##  23:17:50 up 18 days,  1:28,  2 users,  load average: 0.82, 0.36, 0.23</code></pre>
+<pre><code>##  00:42:48 up 18 days,  2:53,  6 users,  load average: 1.95, 2.09, 1.62</code></pre>
 <p><code>who am i</code> displays he username of the current user when this command is invoked:</p>
 <pre class="bash"><code>whoami</code></pre>
 <pre><code>## haoyunj</code></pre>
 <p><code>who</code> displays the users that are currently logged into your Unix computer system:</p>
 <pre class="bash"><code>who</code></pre>
-<pre><code>## filipovicmilan271 pts/7        2021-01-21 06:03 (110.3.236.35.bc.googleusercontent.com)
-## germc3   pts/8        2021-01-21 22:27 (cpe-172-117-252-49.socal.res.rr.com)</code></pre>
+<pre><code>## jyixzhou pts/0        2021-01-22 00:13 (cpe84948c862443-cm84948c862440.cpe.net.fido.ca)
+## filipovicmilan271 pts/7        2021-01-21 06:03 (110.3.236.35.bc.googleusercontent.com)
+## germc3   pts/8        2021-01-21 22:27 (cpe-172-117-252-49.socal.res.rr.com)
+## spendlove.sj pts/13       2021-01-21 23:35 (cpe-172-117-248-147.socal.res.rr.com)
+## elviscuihan pts/16       2021-01-22 00:28 (115.206.116.237)
+## jihcai   pts/17       2021-01-22 00:34 (ip68-6-101-100.sb.sd.cox.net)</code></pre>
 <p><code>w</code> displays uptime,user who has logged in and their information :</p>
 <pre class="bash"><code>w</code></pre>
-<pre><code>##  23:17:50 up 18 days,  1:28,  2 users,  load average: 0.82, 0.36, 0.23
+<pre><code>##  00:42:48 up 18 days,  2:53,  6 users,  load average: 1.95, 2.09, 1.62
 ## USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
-## filipovi pts/7    110.3.236.35.bc. 06:03   17:08m  0.06s  0.06s -bash
-## germc3   pts/8    cpe-172-117-252- 22:27   40:06   0.09s  0.09s -bash</code></pre>
+## jyixzhou pts/0    cpe84948c862443- 00:13   27:28   0.04s  0.04s -bash
+## filipovi pts/7    110.3.236.35.bc. Thu06   18:33m  0.06s  0.06s -bash
+## germc3   pts/8    cpe-172-117-252- 22:27   19:04   0.15s  0.15s -bash
+## spendlov pts/13   cpe-172-117-248- 23:35    1:06m  0.04s  0.00s gzip -dc -- /usr/203b-data/mimic-iv/core/admissions.csv.gz
+## elviscui pts/16   115.206.116.237  00:28    3:20   0.05s  0.05s -bash
+## jihcai   pts/17   ip68-6-101-100.s 00:34    3:36   0.06s  0.06s -bash</code></pre>
 <p><code>id</code> displays the uid,gid,groups,context:</p>
 <pre class="bash"><code>id</code></pre>
 <pre><code>## uid=1016(haoyunj) gid=1018(haoyunj) groups=1018(haoyunj) context=system_u:system_r:initrc_t:s0</code></pre>
 <p><code>last | head</code> displays the latest 10 logged user and their information:</p>
 <pre class="bash"><code>last | head</code></pre>
-<pre><code>## germc3   pts/8        cpe-172-117-252- Thu Jan 21 22:27   still logged in   
+<pre><code>## jihcai   pts/17       ip68-6-101-100.s Fri Jan 22 00:34   still logged in   
+## elviscui pts/16       115.206.116.237  Fri Jan 22 00:28   still logged in   
+## kmishimo pts/16       ip174-67-246-239 Fri Jan 22 00:22 - 00:25  (00:03)    
+## jyixzhou pts/0        cpe84948c862443- Fri Jan 22 00:13   still logged in   
+## spendlov pts/13       cpe-172-117-248- Thu Jan 21 23:35   still logged in   
+## hunanzho pts/11       47.145.202.194   Thu Jan 21 23:28 - 00:34  (01:06)    
+## haoyunj  pts/1        101.93.71.50     Thu Jan 21 23:28 - 23:54  (00:26)    
+## germc3   pts/8        cpe-172-117-252- Thu Jan 21 22:27   still logged in   
 ## huazhou  pts/8        108-64-58-205.li Thu Jan 21 22:19 - 22:19  (00:00)    
-## dshehtan pts/0        cpe-75-82-17-105 Thu Jan 21 20:47 - 20:50  (00:02)    
-## asburyse pts/0        c-73-25-154-169. Thu Jan 21 19:25 - 20:12  (00:47)    
-## asburyse pts/0        c-73-25-154-169. Thu Jan 21 17:13 - 17:59  (00:46)    
-## asburyse pts/0        c-73-25-154-169. Thu Jan 21 17:11 - 17:13  (00:01)    
-## haoyunj  pts/0        101.93.71.50     Thu Jan 21 13:38 - 14:07  (00:29)    
-## haoyunj  pts/1        101.93.71.50     Thu Jan 21 13:08 - 13:30  (00:22)    
-## haoyunj  pts/0        101.93.71.50     Thu Jan 21 12:53 - 13:15  (00:22)    
-## haoyunj  pts/0        101.93.71.50     Thu Jan 21 12:27 - 12:50  (00:22)</code></pre>
+## dshehtan pts/0        cpe-75-82-17-105 Thu Jan 21 20:47 - 20:50  (00:02)</code></pre>
 <p><code>echo {con,pre}{sent,fer}{s,ed}</code> displays different combinations of the part of the words:</p>
 <pre class="bash"><code>echo {con,pre}{sent,fer}{s,ed}</code></pre>
 <pre><code>## consents consented confers confered presents presented prefers prefered</code></pre>
@@ -744,8 +734,8 @@ head -n &quot;$2&quot; &quot;$1&quot; | tail -n &quot;$3&quot;</code></pre>
 <pre class="bash"><code>time sleep 5</code></pre>
 <pre><code>## 
 ## real 0m5.002s
-## user 0m0.002s
-## sys  0m0.000s</code></pre>
+## user 0m0.001s
+## sys  0m0.002s</code></pre>
 <p><code>history | tail</code> displays the history of commands:</p>
 <pre class="bash"><code>history | tail</code></pre>
 </div>

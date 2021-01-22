@@ -97,55 +97,31 @@ Display the number of lines in each data file using a similar loop.
     ```
 3.# of unique patients
     ```{bash}
-    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $1 }'|sort|uniq|wc -l
+zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $1 }'|sort|tail -n+2|awk 'END{print NR}'|uniq
     ```   
 4.possible values and # of values taken by  `admission_type`
     ```{bash}
-    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $6 }'|sort|uniq
+    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $6 }'|sort|uniq -c|tail -n+2
     ``` 
-    
-    ```{bash}
-    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $6 }'|sort|uniq|wc -l
-    ```  
 5.possible values and # of values taken by  `admission_location`
     ```{bash}
-    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $7 }'|sort|uniq
+    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $7 }'|sort|uniq -c|tail -n+2
     ``` 
-    
-    ```{bash}
-    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $7 }'|sort|uniq|wc -l
-    ```  
 6.possible values and # of values taken by `insurance`
     ```{bash}
-    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $9 }'|sort|uniq
-    ```  
-    
-    ```{bash}
-    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $9 }'|sort|uniq|wc -l
+    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $9 }'|sort|uniq -c|tail -n+2
     ```  
 7.possible values and # of values taken by `language`
     ```{bash}
-    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $10 }'|sort|uniq 
-    ```  
-    
-    ```{bash}
-    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $10 }'|sort|uniq|wc -l
+    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $10 }'|sort|uniq -c|tail -n+2
     ```  
 8.possible values and # of values taken by `marital_status`
     ```{bash}
-    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $11 }'|sort|uniq 
-    ```  
-    
-    ```{bash}
-    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $11 }'|sort|uniq|wc -l
+    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $11 }'|sort|uniq -c|tail -n+2
     ```  
 9.possible values and # of values taken by `ethnicity `  
     ```{bash}
-    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $12 }'|sort|uniq 
-    ```  
-    
-    ```{bash}
-    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $12 }'|sort|uniq|wc -l
+    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $12 }'|sort|uniq -c|tail -n+2
     ```  
 
 ## Q3. Who's popular in Price and Prejudice
