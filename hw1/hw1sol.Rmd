@@ -87,8 +87,7 @@ Display the number of lines in each data file using a similar loop.
     ```
     
 4. Display the first few lines of `admissions.csv.gz`. How many rows are in this data file? How many unique patients (identified by `subject_id`) are in this data file? What are the possible values taken by each of the variable `admission_type`, `admission_location`, `insurance`, `language`, `marital_status`, and `ethnicity`? Also report the count for each unique value of these variables. (Hint: combine Linux commands `zcat`, `head`/`tail`, `awk`, `uniq`, `wc`, and so on.)
-***Solutions:***
-1.Display the first few lines of `admissions.csv.gz`.
+***Solutions:***1.Display the first few lines of `admissions.csv.gz`.
     ```{bash}
     zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|head
     ```
@@ -190,11 +189,11 @@ Using `chmod` make the file executable by the owner, and run
     ```
 Explain the output. Explain the meaning of `"$1"`, `"$2"`, and `"$3"` in this shell script. Why do we need the first line of the shell script?
 ***OUTPUT:***
-Author: Jane Austen
+ Author: Jane Austen
 
-Editor: R. W. (Robert William) Chapman
+ Editor: R. W. (Robert William) Chapman
 The first line told the system to explain the script by bash shell.
-`"$1"`, `"$2"`, and `"$3"` are the positional variables which means the first,second and the third parameter.
+`"$1"`, `"$2"`, and `"$3"` are the positional variables which means the first,second and the third parameter. So the output is result of the command "head -n 20 pride_and_prejudice.txt | tail-n 5 ".
 ### Q4. More fun with Linux
 
 Try these commands in Bash and interpret the results: `cal`, `cal 2021`, `cal 9 1752` (anything unusual?), `date`, `hostname`, `arch`, `uname -a`, `uptime`, `who am i`, `who`, `w`, `id`, `last | head`, `echo {con,pre}{sent,fer}{s,ed}`, `time sleep 5`, `history | tail`.
@@ -232,11 +231,11 @@ uname -a
 ```{bash}
 uptime
 ```
-`who am i` displays :
+`who am i` displays he username of the current user when this command is invoked:
 ```{bash}
 whoami
 ```
-`who` displays :
+`who` displays the users that are currently logged into your Unix computer system:
 ```{bash}
 who
 ```
