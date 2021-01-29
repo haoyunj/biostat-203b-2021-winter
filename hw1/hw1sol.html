@@ -524,9 +524,11 @@ for datafile in /usr/203b-data/mimic-iv/core/*.gz
 <pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|wc -l</code></pre>
 <pre><code>## 524521</code></pre>
 <p>3.# of unique patients</p>
-<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $1 }&#39;|sort|
+<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk &#39;(NR &gt; 1)&#39;|
+cut -d &#39;,&#39; -f1|
+sort|
 uniq|wc -l</code></pre>
-<pre><code>## 257367</code></pre>
+<pre><code>## 257366</code></pre>
 <p>4.possible values and # of values taken by <code>admission_type</code></p>
 <pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $6 }&#39;|
 sort|uniq -c|tail -n+2</code></pre>
@@ -590,13 +592,14 @@ sort|uniq -c|tail -n+2</code></pre>
 <h2>Q3. Who’s popular in Price and Prejudice</h2>
 <ol style="list-style-type: decimal">
 <li><p>You and your friend just have finished reading <em>Pride and Prejudice</em> by Jane Austen. Among the four main characters in the book, Elizabeth, Jane, Lydia, and Darcy, your friend thinks that Darcy was the most mentioned. You, however, are certain it was Elizabeth. Obtain the full text of the novel from <a href="http://www.gutenberg.org/cache/epub/42671/pg42671.txt" class="uri">http://www.gutenberg.org/cache/epub/42671/pg42671.txt</a> and save to your local folder.</p>
-<pre class="bash"><code>curl http://www.gutenberg.org/cache/epub/42671/pg42671.txt  &gt; pride_and_prejudice.txt</code></pre>
+<pre class="bash"><code>curl http://www.gutenberg.org/cache/epub/42671/pg42671.txt \
+&gt; pride_and_prejudice.txt</code></pre>
 <pre><code>##   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
 ##                                  Dload  Upload   Total   Spent    Left  Speed
 ## 
  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
- 8  708k    8 64481    0     0   175k      0  0:00:04 --:--:--  0:00:04  175k
-100  708k  100  708k    0     0   725k      0 --:--:-- --:--:-- --:--:--  724k</code></pre></li>
+19  708k   19  137k    0     0   170k      0  0:00:04 --:--:--  0:00:04  170k
+100  708k  100  708k    0     0   525k      0  0:00:01  0:00:01 --:--:--  526k</code></pre></li>
 </ol>
 <p>Do <strong>not</strong> put this text file <code>pride_and_prejudice.txt</code> in Git. Using a <code>for</code> loop, how would you tabulate the number of times each of the four characters is mentioned?</p>
 <pre><code>```bash
@@ -685,7 +688,7 @@ head -n &quot;$2&quot; &quot;$1&quot; | tail -n &quot;$3&quot;</code></pre>
 ## 24 25 26 27 28 29 30</code></pre>
 <p><code>date</code> displays date of the system:</p>
 <pre class="bash"><code>date</code></pre>
-<pre><code>## Fri Jan 29 00:10:47 UTC 2021</code></pre>
+<pre><code>## Fri Jan 29 02:46:04 UTC 2021</code></pre>
 <p><code>hostname</code> displays the hostname of system:</p>
 <pre class="bash"><code>hostname</code></pre>
 <pre><code>## ucla-biostat-203b</code></pre>
@@ -697,43 +700,37 @@ head -n &quot;$2&quot; &quot;$1&quot; | tail -n &quot;$3&quot;</code></pre>
 <pre><code>## Linux ucla-biostat-203b 3.10.0-1160.6.1.el7.x86_64 #1 SMP Tue Nov 17 13:59:11 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux</code></pre>
 <p><code>uptime</code> displays the uptime,user,load average:</p>
 <pre class="bash"><code>uptime</code></pre>
-<pre><code>##  00:10:47 up 25 days,  2:21,  6 users,  load average: 0.75, 0.57, 0.45</code></pre>
+<pre><code>##  02:46:04 up 25 days,  4:57,  3 users,  load average: 0.85, 0.63, 0.54</code></pre>
 <p><code>who am i</code> displays he username of the current user when this command is invoked:</p>
 <pre class="bash"><code>whoami</code></pre>
 <pre><code>## haoyunj</code></pre>
 <p><code>who</code> displays the users that are currently logged into your Unix computer system:</p>
 <pre class="bash"><code>who</code></pre>
 <pre><code>## filipovicmilan271 pts/7        2021-01-21 06:03 (110.3.236.35.bc.googleusercontent.com)
-## hunanzhou pts/8        2021-01-28 23:03 (47.145.202.194)
-## elviscuihan pts/9        2021-01-28 23:05 (115.195.36.17)
-## jtan.smeltzer pts/10       2021-01-28 23:24 (cpe-172-115-102-86.socal.res.rr.com)
-## kmli     pts/12       2021-01-28 23:58 (ip68-110-213-196.rn.hr.cox.net)
-## liqiao93 pts/15       2021-01-29 00:05 (cpe-75-82-206-158.socal.res.rr.com)</code></pre>
+## liqiao93 pts/8        2021-01-29 02:30 (cpe-75-82-206-158.socal.res.rr.com)
+## wzdbruins318 pts/10       2021-01-29 02:39 (112.32.12.252)</code></pre>
 <p><code>w</code> displays uptime,user who has logged in and their information :</p>
 <pre class="bash"><code>w</code></pre>
-<pre><code>##  00:10:47 up 25 days,  2:21,  6 users,  load average: 0.75, 0.57, 0.45
+<pre><code>##  02:46:04 up 25 days,  4:57,  3 users,  load average: 0.85, 0.63, 0.54
 ## USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
 ## filipovi pts/7    110.3.236.35.bc. 21Jan21  7days  0.06s  0.06s -bash
-## hunanzho pts/8    47.145.202.194   23:03   42:47   0.14s  0.14s -bash
-## elviscui pts/9    115.195.36.17    23:05   13:51   0.37s  0.37s -bash
-## jtan.sme pts/10   cpe-172-115-102- 23:24   39:19   0.02s  0.02s -bash
-## kmli     pts/12   ip68-110-213-196 23:58   10:31   0.07s  0.07s -bash
-## liqiao93 pts/15   cpe-75-82-206-15 00:05    4:47   0.02s  0.02s -bash</code></pre>
+## liqiao93 pts/8    cpe-75-82-206-15 02:30    4.00s  0.09s  0.07s -bash
+## wzdbruin pts/10   112.32.12.252    02:39   12.00s  0.05s  0.05s -bash</code></pre>
 <p><code>id</code> displays the uid,gid,groups,context:</p>
 <pre class="bash"><code>id</code></pre>
 <pre><code>## uid=1016(haoyunj) gid=1018(haoyunj) groups=1018(haoyunj) context=system_u:system_r:initrc_t:s0</code></pre>
 <p><code>last | head</code> displays the latest 10 logged user and their information:</p>
 <pre class="bash"><code>last | head</code></pre>
-<pre><code>## liqiao93 pts/15       cpe-75-82-206-15 Fri Jan 29 00:05   still logged in   
-## kmli     pts/12       ip68-110-213-196 Thu Jan 28 23:58   still logged in   
-## jtan.sme pts/10       cpe-172-115-102- Thu Jan 28 23:24   still logged in   
-## elviscui pts/9        115.195.36.17    Thu Jan 28 23:05   still logged in   
-## hunanzho pts/8        47.145.202.194   Thu Jan 28 23:03   still logged in   
-## valentin pts/1        cpe-45-51-97-223 Wed Jan 27 20:04 - 21:01  (00:57)    
-## dshehtan pts/1        cpe-45-51-97-200 Wed Jan 27 01:53 - 02:02  (00:09)    
-## liqiao93 pts/10       cpe-75-82-206-15 Wed Jan 27 00:37 - 00:51  (00:13)    
-## kmishimo pts/12       ip174-67-246-239 Tue Jan 26 23:31 - 23:45  (00:14)    
-## linyuzho pts/10       s-169-232-70-230 Tue Jan 26 23:30 - 00:20  (00:50)</code></pre>
+<pre><code>## wzdbruin pts/10       112.32.12.252    Fri Jan 29 02:39   still logged in   
+## liqiao93 pts/8        cpe-75-82-206-15 Fri Jan 29 02:30   still logged in   
+## wzdbruin pts/10       112.32.12.252    Fri Jan 29 02:28 - 02:37  (00:09)    
+## liqiao93 pts/8        cpe-75-82-206-15 Fri Jan 29 02:24 - 02:30  (00:05)    
+## zhaofan1 pts/8        cpe-76-91-16-146 Fri Jan 29 01:47 - 01:52  (00:04)    
+## zhaofan1 pts/10       cpe-76-91-16-146 Fri Jan 29 01:44 - 01:47  (00:02)    
+## zhaofan1 pts/10       cpe-76-91-16-146 Fri Jan 29 01:43 - 01:43  (00:00)    
+## zhaofan1 pts/10       cpe-76-91-16-146 Fri Jan 29 01:27 - 01:31  (00:03)    
+## germc3   pts/24       cpe-172-117-252- Fri Jan 29 00:57 - 02:30  (01:33)    
+## linyuzho pts/23       s-169-232-70-230 Fri Jan 29 00:46 - 01:31  (00:44)</code></pre>
 <p><code>echo {con,pre}{sent,fer}{s,ed}</code> displays different combinations of the part of the words:</p>
 <pre class="bash"><code>echo {con,pre}{sent,fer}{s,ed}</code></pre>
 <pre><code>## consents consented confers confered presents presented prefers prefered</code></pre>
