@@ -97,7 +97,9 @@ Display the number of lines in each data file using a similar loop.
     ```
 3.# of unique patients
     ```{bash}
-zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $1 }'|sort|
+zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk '(NR > 1)'|
+cut -d ',' -f1|
+sort|
 uniq|wc -l
     ```   
 4.possible values and # of values taken by  `admission_type`
@@ -135,7 +137,8 @@ uniq|wc -l
 
 1. You and your friend just have finished reading *Pride and Prejudice* by Jane Austen. Among the four main characters in the book, Elizabeth, Jane, Lydia, and Darcy, your friend thinks that Darcy was the most mentioned. You, however, are certain it was Elizabeth. Obtain the full text of the novel from <http://www.gutenberg.org/cache/epub/42671/pg42671.txt> and save to your local folder. 
     ```{bash}
-    curl http://www.gutenberg.org/cache/epub/42671/pg42671.txt  > pride_and_prejudice.txt
+    curl http://www.gutenberg.org/cache/epub/42671/pg42671.txt \
+    > pride_and_prejudice.txt
     ```
     
 Do **not** put this text file `pride_and_prejudice.txt` in Git. Using a `for` loop, how would you tabulate the number of times each of the four characters is mentioned?
