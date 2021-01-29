@@ -433,7 +433,7 @@ summary {
 <ol style="list-style-type: decimal">
 <li>This exercise (and later in this course) uses the <a href="https://mimic-iv.mit.edu">MIMIC-IV data</a>, a freely accessible critical care database developed by the MIT Lab for Computational Physiology. Follow the instructions at <a href="https://mimic-iv.mit.edu/docs/access/" class="uri">https://mimic-iv.mit.edu/docs/access/</a> to (1) complete the CITI <code>Data or Specimens Only Research</code> course and (2) obtain the PhysioNet credential for using the MIMIC-IV data. Display the verification links to your completion report and completion certificate here. (Hint: The CITI training takes a couple hours and the PhysioNet credentialing takes a couple days; do not leave it to the last minute.)</li>
 </ol>
-<p><strong><em>Solution:</em></strong> Here is my <a href="citiprogram.org/verify/?k56a4b649-41eb-4528-b8a7-6ffd98d72e23-40373337">course completion report</a> Here is my <a href="citiprogram.org/verify/?w4bf2d202-74ae-4ed7-a449-49b6a9b7e2ed-40373337">course completion report</a></p>
+<p><strong><em>Solution:</em></strong> Here is my <a href="https://www.citiprogram.org/verify/?k56a4b649-41eb-4528-b8a7-6ffd98d72e23-40373337">course completion report</a> Here is my <a href="https://www.citiprogram.org/verify/?w4bf2d202-74ae-4ed7-a449-49b6a9b7e2ed-40373337">course completion report</a></p>
 <ol start="2" style="list-style-type: decimal">
 <li><p>The <code>/usr/203b-data/mimic-iv/</code> folder on teaching server contains data sets from MIMIC-IV. Refer to <a href="https://mimic-iv.mit.edu/docs/datasets/" class="uri">https://mimic-iv.mit.edu/docs/datasets/</a> for details of data files.</p>
 <pre class="bash"><code>ls -l /usr/203b-data/mimic-iv</code></pre>
@@ -524,10 +524,12 @@ for datafile in /usr/203b-data/mimic-iv/core/*.gz
 <pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|wc -l</code></pre>
 <pre><code>## 524521</code></pre>
 <p>3.# of unique patients</p>
-<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $1 }&#39;|sort|tail -n+2|awk &#39;END{print NR}&#39;|uniq</code></pre>
-<pre><code>## 524520</code></pre>
+<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $1 }&#39;|sort|
+uniq|wc -l</code></pre>
+<pre><code>## 257367</code></pre>
 <p>4.possible values and # of values taken by <code>admission_type</code></p>
-<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $6 }&#39;|sort|uniq -c|tail -n+2</code></pre>
+<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $6 }&#39;|
+sort|uniq -c|tail -n+2</code></pre>
 <pre><code>##    7259 AMBULATORY OBSERVATION
 ##   21595 DIRECT EMER.
 ##   20014 DIRECT OBSERVATION
@@ -538,7 +540,8 @@ for datafile in /usr/203b-data/mimic-iv/core/*.gz
 ##   41103 SURGICAL SAME DAY ADMISSION
 ##   47970 URGENT</code></pre>
 <p>5.possible values and # of values taken by <code>admission_location</code></p>
-<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $7 }&#39;|sort|uniq -c|tail -n+2</code></pre>
+<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $7 }&#39;|
+sort|uniq -c|tail -n+2</code></pre>
 <pre><code>##       1 admission_location
 ##     191 AMBULATORY SURGERY TRANSFER
 ##   10678 CLINIC REFERRAL
@@ -552,23 +555,27 @@ for datafile in /usr/203b-data/mimic-iv/core/*.gz
 ##    4069 TRANSFER FROM SKILLED NURSING FACILITY
 ##   16715 WALK-IN/SELF REFERRAL</code></pre>
 <p>6.possible values and # of values taken by <code>insurance</code></p>
-<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $9 }&#39;|sort|uniq -c|tail -n+2</code></pre>
+<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $9 }&#39;|
+sort|uniq -c|tail -n+2</code></pre>
 <pre><code>##   50962 Medicaid
 ##  171492 Medicare
 ##  302066 Other</code></pre>
 <p>7.possible values and # of values taken by <code>language</code></p>
-<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $10 }&#39;|sort|uniq -c|tail -n+2</code></pre>
+<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $10 }&#39;|
+sort|uniq -c|tail -n+2</code></pre>
 <pre><code>##  478289 ENGLISH
 ##       1 language</code></pre>
 <p>8.possible values and # of values taken by <code>marital_status</code></p>
-<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $11 }&#39;|sort|uniq -c|tail -n+2</code></pre>
+<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $11 }&#39;|
+sort|uniq -c|tail -n+2</code></pre>
 <pre><code>##   33762 DIVORCED
 ##       1 marital_status
 ##  195326 MARRIED
 ##  180453 SINGLE
 ##   48846 WIDOWED</code></pre>
 <p>9.possible values and # of values taken by <code>ethnicity</code></p>
-<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $12 }&#39;|sort|uniq -c|tail -n+2</code></pre>
+<pre class="bash"><code>zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, &#39;{ print $12 }&#39;|
+sort|uniq -c|tail -n+2</code></pre>
 <pre><code>##   24522 ASIAN
 ##   80526 BLACK/AFRICAN AMERICAN
 ##       1 ethnicity
@@ -583,13 +590,13 @@ for datafile in /usr/203b-data/mimic-iv/core/*.gz
 <h2>Q3. Who’s popular in Price and Prejudice</h2>
 <ol style="list-style-type: decimal">
 <li><p>You and your friend just have finished reading <em>Pride and Prejudice</em> by Jane Austen. Among the four main characters in the book, Elizabeth, Jane, Lydia, and Darcy, your friend thinks that Darcy was the most mentioned. You, however, are certain it was Elizabeth. Obtain the full text of the novel from <a href="http://www.gutenberg.org/cache/epub/42671/pg42671.txt" class="uri">http://www.gutenberg.org/cache/epub/42671/pg42671.txt</a> and save to your local folder.</p>
-<pre class="bash"><code>curl http://www.gutenberg.org/cache/epub/42671/pg42671.txt &gt; pride_and_prejudice.txt</code></pre>
+<pre class="bash"><code>curl http://www.gutenberg.org/cache/epub/42671/pg42671.txt  &gt; pride_and_prejudice.txt</code></pre>
 <pre><code>##   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
 ##                                  Dload  Upload   Total   Spent    Left  Speed
 ## 
  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
-72  708k   72  509k    0     0   531k      0  0:00:01 --:--:--  0:00:01  531k
-100  708k  100  708k    0     0   646k      0  0:00:01  0:00:01 --:--:--  647k</code></pre></li>
+ 8  708k    8 64481    0     0   175k      0  0:00:04 --:--:--  0:00:04  175k
+100  708k  100  708k    0     0   725k      0 --:--:-- --:--:-- --:--:--  724k</code></pre></li>
 </ol>
 <p>Do <strong>not</strong> put this text file <code>pride_and_prejudice.txt</code> in Git. Using a <code>for</code> loop, how would you tabulate the number of times each of the four characters is mentioned?</p>
 <pre><code>```bash
@@ -678,7 +685,7 @@ head -n &quot;$2&quot; &quot;$1&quot; | tail -n &quot;$3&quot;</code></pre>
 ## 24 25 26 27 28 29 30</code></pre>
 <p><code>date</code> displays date of the system:</p>
 <pre class="bash"><code>date</code></pre>
-<pre><code>## Fri Jan 22 00:42:48 UTC 2021</code></pre>
+<pre><code>## Fri Jan 29 00:10:47 UTC 2021</code></pre>
 <p><code>hostname</code> displays the hostname of system:</p>
 <pre class="bash"><code>hostname</code></pre>
 <pre><code>## ucla-biostat-203b</code></pre>
@@ -690,43 +697,43 @@ head -n &quot;$2&quot; &quot;$1&quot; | tail -n &quot;$3&quot;</code></pre>
 <pre><code>## Linux ucla-biostat-203b 3.10.0-1160.6.1.el7.x86_64 #1 SMP Tue Nov 17 13:59:11 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux</code></pre>
 <p><code>uptime</code> displays the uptime,user,load average:</p>
 <pre class="bash"><code>uptime</code></pre>
-<pre><code>##  00:42:48 up 18 days,  2:53,  6 users,  load average: 1.95, 2.09, 1.62</code></pre>
+<pre><code>##  00:10:47 up 25 days,  2:21,  6 users,  load average: 0.75, 0.57, 0.45</code></pre>
 <p><code>who am i</code> displays he username of the current user when this command is invoked:</p>
 <pre class="bash"><code>whoami</code></pre>
 <pre><code>## haoyunj</code></pre>
 <p><code>who</code> displays the users that are currently logged into your Unix computer system:</p>
 <pre class="bash"><code>who</code></pre>
-<pre><code>## jyixzhou pts/0        2021-01-22 00:13 (cpe84948c862443-cm84948c862440.cpe.net.fido.ca)
-## filipovicmilan271 pts/7        2021-01-21 06:03 (110.3.236.35.bc.googleusercontent.com)
-## germc3   pts/8        2021-01-21 22:27 (cpe-172-117-252-49.socal.res.rr.com)
-## spendlove.sj pts/13       2021-01-21 23:35 (cpe-172-117-248-147.socal.res.rr.com)
-## elviscuihan pts/16       2021-01-22 00:28 (115.206.116.237)
-## jihcai   pts/17       2021-01-22 00:34 (ip68-6-101-100.sb.sd.cox.net)</code></pre>
+<pre><code>## filipovicmilan271 pts/7        2021-01-21 06:03 (110.3.236.35.bc.googleusercontent.com)
+## hunanzhou pts/8        2021-01-28 23:03 (47.145.202.194)
+## elviscuihan pts/9        2021-01-28 23:05 (115.195.36.17)
+## jtan.smeltzer pts/10       2021-01-28 23:24 (cpe-172-115-102-86.socal.res.rr.com)
+## kmli     pts/12       2021-01-28 23:58 (ip68-110-213-196.rn.hr.cox.net)
+## liqiao93 pts/15       2021-01-29 00:05 (cpe-75-82-206-158.socal.res.rr.com)</code></pre>
 <p><code>w</code> displays uptime,user who has logged in and their information :</p>
 <pre class="bash"><code>w</code></pre>
-<pre><code>##  00:42:48 up 18 days,  2:53,  6 users,  load average: 1.95, 2.09, 1.62
+<pre><code>##  00:10:47 up 25 days,  2:21,  6 users,  load average: 0.75, 0.57, 0.45
 ## USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
-## jyixzhou pts/0    cpe84948c862443- 00:13   27:28   0.04s  0.04s -bash
-## filipovi pts/7    110.3.236.35.bc. Thu06   18:33m  0.06s  0.06s -bash
-## germc3   pts/8    cpe-172-117-252- 22:27   19:04   0.15s  0.15s -bash
-## spendlov pts/13   cpe-172-117-248- 23:35    1:06m  0.04s  0.00s gzip -dc -- /usr/203b-data/mimic-iv/core/admissions.csv.gz
-## elviscui pts/16   115.206.116.237  00:28    3:20   0.05s  0.05s -bash
-## jihcai   pts/17   ip68-6-101-100.s 00:34    3:36   0.06s  0.06s -bash</code></pre>
+## filipovi pts/7    110.3.236.35.bc. 21Jan21  7days  0.06s  0.06s -bash
+## hunanzho pts/8    47.145.202.194   23:03   42:47   0.14s  0.14s -bash
+## elviscui pts/9    115.195.36.17    23:05   13:51   0.37s  0.37s -bash
+## jtan.sme pts/10   cpe-172-115-102- 23:24   39:19   0.02s  0.02s -bash
+## kmli     pts/12   ip68-110-213-196 23:58   10:31   0.07s  0.07s -bash
+## liqiao93 pts/15   cpe-75-82-206-15 00:05    4:47   0.02s  0.02s -bash</code></pre>
 <p><code>id</code> displays the uid,gid,groups,context:</p>
 <pre class="bash"><code>id</code></pre>
 <pre><code>## uid=1016(haoyunj) gid=1018(haoyunj) groups=1018(haoyunj) context=system_u:system_r:initrc_t:s0</code></pre>
 <p><code>last | head</code> displays the latest 10 logged user and their information:</p>
 <pre class="bash"><code>last | head</code></pre>
-<pre><code>## jihcai   pts/17       ip68-6-101-100.s Fri Jan 22 00:34   still logged in   
-## elviscui pts/16       115.206.116.237  Fri Jan 22 00:28   still logged in   
-## kmishimo pts/16       ip174-67-246-239 Fri Jan 22 00:22 - 00:25  (00:03)    
-## jyixzhou pts/0        cpe84948c862443- Fri Jan 22 00:13   still logged in   
-## spendlov pts/13       cpe-172-117-248- Thu Jan 21 23:35   still logged in   
-## hunanzho pts/11       47.145.202.194   Thu Jan 21 23:28 - 00:34  (01:06)    
-## haoyunj  pts/1        101.93.71.50     Thu Jan 21 23:28 - 23:54  (00:26)    
-## germc3   pts/8        cpe-172-117-252- Thu Jan 21 22:27   still logged in   
-## huazhou  pts/8        108-64-58-205.li Thu Jan 21 22:19 - 22:19  (00:00)    
-## dshehtan pts/0        cpe-75-82-17-105 Thu Jan 21 20:47 - 20:50  (00:02)</code></pre>
+<pre><code>## liqiao93 pts/15       cpe-75-82-206-15 Fri Jan 29 00:05   still logged in   
+## kmli     pts/12       ip68-110-213-196 Thu Jan 28 23:58   still logged in   
+## jtan.sme pts/10       cpe-172-115-102- Thu Jan 28 23:24   still logged in   
+## elviscui pts/9        115.195.36.17    Thu Jan 28 23:05   still logged in   
+## hunanzho pts/8        47.145.202.194   Thu Jan 28 23:03   still logged in   
+## valentin pts/1        cpe-45-51-97-223 Wed Jan 27 20:04 - 21:01  (00:57)    
+## dshehtan pts/1        cpe-45-51-97-200 Wed Jan 27 01:53 - 02:02  (00:09)    
+## liqiao93 pts/10       cpe-75-82-206-15 Wed Jan 27 00:37 - 00:51  (00:13)    
+## kmishimo pts/12       ip174-67-246-239 Tue Jan 26 23:31 - 23:45  (00:14)    
+## linyuzho pts/10       s-169-232-70-230 Tue Jan 26 23:30 - 00:20  (00:50)</code></pre>
 <p><code>echo {con,pre}{sent,fer}{s,ed}</code> displays different combinations of the part of the words:</p>
 <pre class="bash"><code>echo {con,pre}{sent,fer}{s,ed}</code></pre>
 <pre><code>## consents consented confers confered presents presented prefers prefered</code></pre>
@@ -734,7 +741,7 @@ head -n &quot;$2&quot; &quot;$1&quot; | tail -n &quot;$3&quot;</code></pre>
 <pre class="bash"><code>time sleep 5</code></pre>
 <pre><code>## 
 ## real 0m5.002s
-## user 0m0.001s
+## user 0m0.000s
 ## sys  0m0.002s</code></pre>
 <p><code>history | tail</code> displays the history of commands:</p>
 <pre class="bash"><code>history | tail</code></pre>
