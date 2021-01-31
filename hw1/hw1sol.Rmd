@@ -1,6 +1,6 @@
 ---
 title: "Biostat 203B Homework 1"
-author: Hua Zhou
+author: Haoyun Jiang
 subtitle: Due Jan 22 @ 11:59PM
 output: html_document
 ---
@@ -42,8 +42,8 @@ sessionInfo()
 
 1. This exercise (and later in this course) uses the [MIMIC-IV data](https://mimic-iv.mit.edu), a freely accessible critical care database developed by the MIT Lab for Computational Physiology. Follow the instructions at <https://mimic-iv.mit.edu/docs/access/> to (1) complete the CITI `Data or Specimens Only Research` course and (2) obtain the PhysioNet credential for using the MIMIC-IV data. Display the verification links to your completion report and completion certificate here. (Hint: The CITI training takes a couple hours and the PhysioNet credentialing takes a couple days; do not leave it to the last minute.)
 
-***Solution:*** Here is my [course completion report](citiprogram.org/verify/?k56a4b649-41eb-4528-b8a7-6ffd98d72e23-40373337)
-Here is my [course completion report](citiprogram.org/verify/?w4bf2d202-74ae-4ed7-a449-49b6a9b7e2ed-40373337)
+***Solution:*** Here is my [course completion report](https://www.citiprogram.org/verify/?k56a4b649-41eb-4528-b8a7-6ffd98d72e23-40373337)
+Here is my [course completion report](https://www.citiprogram.org/verify/?w4bf2d202-74ae-4ed7-a449-49b6a9b7e2ed-40373337)
 
 2. The `/usr/203b-data/mimic-iv/` folder on teaching server contains data sets from MIMIC-IV. Refer to <https://mimic-iv.mit.edu/docs/datasets/> for details of data files.  
     ```{bash}
@@ -87,8 +87,7 @@ Display the number of lines in each data file using a similar loop.
     ```
     
 4. Display the first few lines of `admissions.csv.gz`. How many rows are in this data file? How many unique patients (identified by `subject_id`) are in this data file? What are the possible values taken by each of the variable `admission_type`, `admission_location`, `insurance`, `language`, `marital_status`, and `ethnicity`? Also report the count for each unique value of these variables. (Hint: combine Linux commands `zcat`, `head`/`tail`, `awk`, `uniq`, `wc`, and so on.)
-***Solutions:***
-1.Display the first few lines of `admissions.csv.gz`.
+***Solutions:***1.Display the first few lines of `admissions.csv.gz`.
     ```{bash}
     zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|head
     ```
@@ -98,63 +97,48 @@ Display the number of lines in each data file using a similar loop.
     ```
 3.# of unique patients
     ```{bash}
-    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $1 }'|sort|uniq|wc -l
+zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk '(NR > 1)'|
+cut -d ',' -f1|
+sort|
+uniq|wc -l
     ```   
 4.possible values and # of values taken by  `admission_type`
     ```{bash}
-    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $6 }'|sort|uniq
+    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $6 }'|
+    sort|uniq -c|tail -n+2
     ``` 
-    
-    ```{bash}
-    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $6 }'|sort|uniq|wc -l
-    ```  
 5.possible values and # of values taken by  `admission_location`
     ```{bash}
-    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $7 }'|sort|uniq
+    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $7 }'|
+    sort|uniq -c|tail -n+2
     ``` 
-    
-    ```{bash}
-    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $7 }'|sort|uniq|wc -l
-    ```  
 6.possible values and # of values taken by `insurance`
     ```{bash}
-    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $9 }'|sort|uniq
-    ```  
-    
-    ```{bash}
-    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $9 }'|sort|uniq|wc -l
+    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $9 }'|
+    sort|uniq -c|tail -n+2
     ```  
 7.possible values and # of values taken by `language`
     ```{bash}
-    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $10 }'|sort|uniq 
-    ```  
-    
-    ```{bash}
-    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $10 }'|sort|uniq|wc -l
+    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $10 }'|
+    sort|uniq -c|tail -n+2
     ```  
 8.possible values and # of values taken by `marital_status`
     ```{bash}
-    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $11 }'|sort|uniq 
-    ```  
-    
-    ```{bash}
-    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $11 }'|sort|uniq|wc -l
+    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $11 }'|
+    sort|uniq -c|tail -n+2
     ```  
 9.possible values and # of values taken by `ethnicity `  
     ```{bash}
-    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $12 }'|sort|uniq 
-    ```  
-    
-    ```{bash}
-    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $12 }'|sort|uniq|wc -l
+    zcat /usr/203b-data/mimic-iv/core/admissions.csv.gz|awk -F, '{ print $12 }'|
+    sort|uniq -c|tail -n+2
     ```  
 
 ## Q3. Who's popular in Price and Prejudice
 
 1. You and your friend just have finished reading *Pride and Prejudice* by Jane Austen. Among the four main characters in the book, Elizabeth, Jane, Lydia, and Darcy, your friend thinks that Darcy was the most mentioned. You, however, are certain it was Elizabeth. Obtain the full text of the novel from <http://www.gutenberg.org/cache/epub/42671/pg42671.txt> and save to your local folder. 
     ```{bash}
-    curl http://www.gutenberg.org/cache/epub/42671/pg42671.txt > \
-    pride_and_prejudice.txt
+    curl http://www.gutenberg.org/cache/epub/42671/pg42671.txt \
+    > pride_and_prejudice.txt
     ```
     
 Do **not** put this text file `pride_and_prejudice.txt` in Git. Using a `for` loop, how would you tabulate the number of times each of the four characters is mentioned?
@@ -191,11 +175,11 @@ Using `chmod` make the file executable by the owner, and run
     ```
 Explain the output. Explain the meaning of `"$1"`, `"$2"`, and `"$3"` in this shell script. Why do we need the first line of the shell script?
 ***OUTPUT:***
-Author: Jane Austen
+ Author: Jane Austen
 
-Editor: R. W. (Robert William) Chapman
+ Editor: R. W. (Robert William) Chapman
 The first line told the system to explain the script by bash shell.
-`"$1"`, `"$2"`, and `"$3"` are the positional variables which means the first,second and the third parameter.
+`"$1"`, `"$2"`, and `"$3"` are the positional variables which means the first,second and the third parameter. So the output is result of the command "head -n 20 pride_and_prejudice.txt | tail-n 5 ".
 ### Q4. More fun with Linux
 
 Try these commands in Bash and interpret the results: `cal`, `cal 2021`, `cal 9 1752` (anything unusual?), `date`, `hostname`, `arch`, `uname -a`, `uptime`, `who am i`, `who`, `w`, `id`, `last | head`, `echo {con,pre}{sent,fer}{s,ed}`, `time sleep 5`, `history | tail`.
@@ -233,11 +217,11 @@ uname -a
 ```{bash}
 uptime
 ```
-`who am i` displays :
+`who am i` displays he username of the current user when this command is invoked:
 ```{bash}
 whoami
 ```
-`who` displays :
+`who` displays the users that are currently logged into your Unix computer system:
 ```{bash}
 who
 ```
