@@ -38,6 +38,8 @@ system(str_c("tree -s -L 2 ", shQuote(mimic_path)), intern = TRUE)
 
 At this moment, you should already get credentialed on the PhysioNet. Please include a screenshot of your `Data Use Agreement for the MIMIC-IV (v0.4)`.
 
+***Solution: My `Data Use Agreement for the MIMIC-IV (v1.4)` has already been uploaded.***
+
 ## Q2. `read.csv` (base R) vs `read_csv` (tidyverse) vs `fread` (data.table)
 
 There are quite a few utilities in R for reading data files. Let us test the speed of reading a moderate sized compressed csv file, `admissions.csv.gz`, by three programs: `read.csv` in base R, `read_csv` in tidyverse, and `fread` in the popular data.table package. Is there any speed difference?
@@ -54,21 +56,62 @@ In this homework, we stick to the tidyverse.
 - first ICU unit  
 - last ICU unit  
 
-###Solutions
+***Solutions***
 
 ```{r}
-icustays_tble<- read_csv(str_c())
+icustays_tble<- read_csv(str_c(mimic_path, "/icu/icustays.csv.gz"))%>%
+  print(width=Inf)
 ```
+1.unique `stay_id`
 ```{r}
 icustays_tble %>%
   distinct(stay_id)%>%
   nrow ()
 ```
+2.unique`subject_id`
 ```{r}
 icustays_tble %>%
   distinct(subject_id)%>%
   nrow ()
 ```
+
+3.length of icu stay
+```{r}
+mutate(icustays_tble,
+       length=(as.numeric(outtime)-as.numeric(intime))/89400
+       ) %>%
+  print(width = Inf)%>%
+  group_by(first_careunit)%>%
+  ggplot(aes(x = first_careunit,y = length,fill=first_careunit,
+             group = first_careunit)) +
+  geom_boxplot() +
+  theme(axis.text.x = element_blank())
+```
+
+4.first icu unit
+```{r}
+icustays_tble %>%
+  count(first_careunit)
+```
+```{r}
+ggplot(data = icustays_tble) + 
+  geom_bar(mapping = aes(x = first_careunit,y= ..prop.., group=1,
+                         fill = first_careunit))+
+  theme(axis.text.x = element_blank())+
+   geom_bar(position="fill")
+```
+
+5.last icu unit
+```{r}
+icustays_tble %>%
+  count(last_careunit)
+```
+```{r}
+ggplot(data = icustays_tble) + 
+  geom_bar(mapping = aes(x = last_careunit, fill = last_careunit))+
+  theme(axis.text.x = element_blank())
+```
+
 
 ## Q4. `admission` data
 
@@ -90,7 +133,129 @@ Information of the patients admitted into hospital is available in `ADMISSION.cs
 - ethnicity  
 - death 
 
+
+
 Note it is possible that one patient (uniquely identified by the `SUBJECT_ID`) is admitted into hospital multiple times. When summarizing some demographic information, it makes sense to summarize based on unique patients. 
+
+```{r}
+admission<- read_csv(str_c(mimic_path, "/core/admissions.csv.gz"))%>%
+  print(width=Inf)
+```
+***summarize of the variables related to admission dates***
+```{r}
+admission %>%
+  mutate(month = month(admittime),
+         year = year(admittime),
+         weekdays = weekdays(admittime),
+         days=day(admittime),
+         hours=hour(admittime),
+         dyear=year(deathtime)) -> admission.date 
+```
+```{r}
+admission.date%>%
+  count(days)
+```
+```{r}
+ggplot(data = admission.date) + 
+  geom_histogram(mapping = aes(x = year, fill = year))
+```
+```{r}
+ggplot(data = admission.date) + 
+  geom_bar(mapping = aes(x = year, fill = year))
+```
+```{r}
+ggplot(data = admission.date) + 
+  geom_bar(mapping = aes(x = month, fill = month))
+```
+```{r}
+ggplot(data = admission.date) + 
+  geom_bar(mapping = aes(x = weekdays, fill = weekdays))
+```
+```{r}
+ggplot(data = admission.date) + 
+  geom_histogram(mapping = aes(x = days, fill = days))
+```
+```{r}
+ggplot(data = admission.date) + 
+  geom_bar(mapping = aes(x = days, fill = days))
+```
+```{r}
+ggplot(data = admission.date) + 
+  geom_histogram(mapping = aes(x = hours, fill = hours))
+```
+```{r}
+ggplot(data = admission.date) + 
+  geom_bar(mapping = aes(x = hours, fill = hours))
+```
+***We could find that most admissions occured in the evening(18-24),especially for 0'clock.***
+
+***number of death in each year***
+```{r}
+filter(admission.date,!is.na(dyear))%>%
+  count(year)
+```
+***admission & discharge location***
+```{r}
+ggplot(data = admission.date) + 
+  geom_bar(mapping = aes(x = admission_location, fill = admission_location))+
+  theme(axis.text.x = element_blank())
+  geom_bar(position="fill")
+```
+```{r}
+ggplot(data = admission.date) + 
+  geom_bar(mapping = aes(x = discharge_location, fill = discharge_location))+
+  theme(axis.text.x = element_blank())
+```
+***admission_type***
+```{r}
+ggplot(data = admission.date) + 
+  geom_bar(mapping = aes(x = admission_type, fill = admission_type))+
+  theme(axis.text.x = element_blank())
+```
+
+***insurance***
+```{r}
+ggplot(data = admission.date) + 
+  geom_bar(mapping = aes(x = insurance, fill = insurance))+
+  theme(axis.text.x = element_blank())
+```
+***language***
+```{r}
+ggplot(data = admission.date) + 
+  geom_bar(mapping = aes(x = language, fill = language))+
+  theme(axis.text.x = element_blank())
+```
+***marital_status***
+```{r}
+ggplot(data = admission.date) + 
+  geom_bar(mapping = aes(x = marital_status, fill = marital_status))+
+  theme(axis.text.x = element_blank())
+```
+***ethnicity***
+```{r}
+ggplot(data = admission.date) + 
+  geom_bar(mapping = aes(x = ethnicity, fill = ethnicity))+
+  theme(axis.text.x = element_blank())
+```
+
+***The number of admissions per patient is 524520/257366=2.038***
+```{r}
+admission %>%
+  distinct(hadm_id)%>%
+  nrow ()
+```
+
+```{r}
+admission %>%
+  distinct(subject_id)%>%
+  nrow ()
+```
+***death*** 
+```{r}
+ggplot(data = admission.date) + 
+  geom_histogram(mapping = aes(x = dyear, fill = dyear))
+```
+
 
 ## Q5. `patient` data
 
@@ -98,12 +263,43 @@ Explore `patients.csv.gz` (<https://mimic-iv.mit.edu/docs/datasets/core/patients
 
 - `gender`  
 - `anchor_age` (explain pattern you see)
+```{r}
+patient<- read_csv(str_c(mimic_path, "/core/patients.csv.gz"))%>%
+  print(width=Inf)
+```
+```{r}
+ggplot(data = patient) + 
+  geom_bar(mapping = aes(x = gender,fill = gender))
+```
+```{r}
+patient%>%
+ count(gender)
+```
+```{r}
+ggplot(data = patient) + 
+  geom_histogram(mapping = aes(x = anchor_age,fill = anchor_age))
+```
+```{r}
+patient%>%
+ count(anchor_age)
+```
+***Solutions***:From the bar chart,we can figure out that the most patiens has the anchor_age of 0,and there's no anchor_age between 0-18.The ANCHOR_AGE is the age of the patient in the given ANCHOR_YEAR/ANCHOR_YEAR_SHIFTED.
 
 ## Q6. Lab results
 
 `labevents.csv.gz` (<https://mimic-iv.mit.edu/docs/datasets/hosp/labevents/>) contains all laboratory measurements for patients. 
 
 We are interested in the lab measurements of creatinine, potassium, sodium, chloride, bicarbonate, hematocrit, white blood cell count, glucose, magnesium, calcium, phosphorus, and lactate. Find the `itemid`s of these lab measurements from `d_labitems.csv.gz` and retrieve a subset of `labevents.csv.gz` only containing these items.
+
+
+labevent<- read_csv(str_c(mimic_path, "/hosp/labevents.csv.gz"))%>%
+  print(width=Inf)
+
+
+labevent_sub<-subset(labevents,itemid=50912|50971|50983|50902|50882|
+                      51221|51301|50931|50960|50893|50813)%>%
+  print(width=Inf)
+
 
 ## Q7. Vitals from chartered events
 
@@ -112,6 +308,10 @@ We are interested in the vitals for ICU patients: heart rate, mean and systolic 
 `chartevents.csv.gz` (<https://mimic-iv.mit.edu/docs/datasets/icu/chartevents/>) contains all the charted data available for a patient. During their ICU stay, the primary repository of a patient’s information is their electronic chart. The `ITEMID` variable indicates a single measurement type in the database. The `VALUE` variable is the value measured for `ITEMID`. 
 
 `d_items.csv.gz` (<https://mimic-iv.mit.edu/docs/datasets/icu/d_items/>) is the dictionary for the `ITEMID` in `CHARTEVENTS.csv`. Find potential values of `ITEMID` that correspond to systolic blood pressure, i.e., `LABEL` contains the string `systolic`. 
+
+chartevent<- read_csv(str_c(mimic_path, "/icu/chartevents.csv.gz"))%>%
+  print(width=Inf)
+
 
 ## Q8. Putting things together
 
