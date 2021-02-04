@@ -39,12 +39,27 @@ system(str_c("tree -s -L 2 ", shQuote(mimic_path)), intern = TRUE)
 At this moment, you should already get credentialed on the PhysioNet. Please include a screenshot of your `Data Use Agreement for the MIMIC-IV (v0.4)`.
 
 ***Solution: My `Data Use Agreement for the MIMIC-IV (v1.4)` has already been uploaded.***
+```{r pressure,echo=FALSE,fig.cap="A caption",out.width='100%'}
+knitr::include_graphics("Agreement.png")
+```
 
 ## Q2. `read.csv` (base R) vs `read_csv` (tidyverse) vs `fread` (data.table)
 
 There are quite a few utilities in R for reading data files. Let us test the speed of reading a moderate sized compressed csv file, `admissions.csv.gz`, by three programs: `read.csv` in base R, `read_csv` in tidyverse, and `fread` in the popular data.table package. Is there any speed difference?
 
 In this homework, we stick to the tidyverse. 
+
+***The `fread` used the least time and the `read.csv` used the longest time.***
+
+```{r eval=FALSE}
+admissionread_csv<- read_csv(str_c(mimic_path, "/core/admissions.csv.gz"))
+```
+```{r eval=FALSE}
+admissionread.csv<- read.csv(str_c(mimic_path, "/core/admissions.csv.gz"))
+```
+```{r eval=FALSE}
+admissionfread<- fread(str_c(mimic_path, "/core/admissions.csv.gz"))
+```
 
 ## Q3. ICU stays
 
@@ -77,15 +92,10 @@ icustays_tble %>%
 
 3.length of icu stay
 ```{r}
-mutate(icustays_tble,
-       length=(as.numeric(outtime)-as.numeric(intime))/89400
-       ) %>%
-  print(width = Inf)%>%
-  group_by(first_careunit)%>%
-  ggplot(aes(x = first_careunit,y = length,fill=first_careunit,
-             group = first_careunit)) +
-  geom_boxplot() +
-  theme(axis.text.x = element_blank())
+icustays_tble %>%
+  ggplot(mapping=aes(x = los)) +
+  geom_histogram() +
+  labs(xlabel="length of stay(days)")
 ```
 
 4.first icu unit
@@ -95,10 +105,8 @@ icustays_tble %>%
 ```
 ```{r}
 ggplot(data = icustays_tble) + 
-  geom_bar(mapping = aes(x = first_careunit,y= ..prop.., group=1,
-                         fill = first_careunit))+
-  theme(axis.text.x = element_blank())+
-   geom_bar(position="fill")
+  geom_bar(mapping = aes(x = first_careunit,fill = first_careunit))+
+  theme(axis.text.x = element_blank())
 ```
 
 5.last icu unit
@@ -190,10 +198,17 @@ ggplot(data = admission.date) +
 ***We could find that most admissions occured in the evening(18-24),especially for 0'clock.***
 
 ***number of death in each year***
+using the `deathtime`
 ```{r}
 filter(admission.date,!is.na(dyear))%>%
   count(year)
 ```
+using the `hospital_expire_flag`
+```{r}
+filter(admission,hospital_expire_flag=1)%>%
+  count(hospital_expire_flag)
+```
+
 ***admission & discharge location***
 ```{r}
 ggplot(data = admission.date) + 
@@ -206,6 +221,7 @@ ggplot(data = admission.date) +
   geom_bar(mapping = aes(x = discharge_location, fill = discharge_location))+
   theme(axis.text.x = element_blank())
 ```
+
 ***admission_type***
 ```{r}
 ggplot(data = admission.date) + 
@@ -219,18 +235,21 @@ ggplot(data = admission.date) +
   geom_bar(mapping = aes(x = insurance, fill = insurance))+
   theme(axis.text.x = element_blank())
 ```
+
 ***language***
 ```{r}
 ggplot(data = admission.date) + 
   geom_bar(mapping = aes(x = language, fill = language))+
   theme(axis.text.x = element_blank())
 ```
+
 ***marital_status***
 ```{r}
 ggplot(data = admission.date) + 
   geom_bar(mapping = aes(x = marital_status, fill = marital_status))+
   theme(axis.text.x = element_blank())
 ```
+
 ***ethnicity***
 ```{r}
 ggplot(data = admission.date) + 
@@ -250,6 +269,7 @@ admission %>%
   distinct(subject_id)%>%
   nrow ()
 ```
+
 ***death*** 
 ```{r}
 ggplot(data = admission.date) + 
@@ -291,9 +311,14 @@ patient%>%
 
 We are interested in the lab measurements of creatinine, potassium, sodium, chloride, bicarbonate, hematocrit, white blood cell count, glucose, magnesium, calcium, phosphorus, and lactate. Find the `itemid`s of these lab measurements from `d_labitems.csv.gz` and retrieve a subset of `labevents.csv.gz` only containing these items.
 
+First take a look at the data.
 
-labevent<- read_csv(str_c(mimic_path, "/hosp/labevents.csv.gz"))%>%
-  print(width=Inf)
+system(str_c("zcat <",shQuote(str_c(mimic_path, "/hosp/labevents.csv.gz")),
+             "|head"),
+       intern=TRUE)
+
+ 
+
 
 
 labevent_sub<-subset(labevents,itemid=50912|50971|50983|50902|50882|
