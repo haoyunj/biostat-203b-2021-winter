@@ -24,7 +24,7 @@ os <- sessionInfo()$running
 if (str_detect(os, "Linux")) {
   mimic_path <- "/usr/203b-data/mimic-iv"
 } else if (str_detect(os, "macOS")) {
-  mimic_path <- "/Users/huazhou/Documents/Box Sync/MIMIC/mimic-iv-0.4"
+  mimic_path <- "/Users/haoyun/Documents/Box Sync/MIMIC/mimic-iv-0.4"
 }
 ```
 
@@ -39,9 +39,8 @@ system(str_c("tree -s -L 2 ", shQuote(mimic_path)), intern = TRUE)
 At this moment, you should already get credentialed on the PhysioNet. Please include a screenshot of your `Data Use Agreement for the MIMIC-IV (v0.4)`.
 
 ***Solution: My `Data Use Agreement for the MIMIC-IV (v1.4)` has already been uploaded.***
-```{r pressure,echo=FALSE,fig.cap="A caption",out.width='100%'}
-knitr::include_graphics("Agreement.png")
-```
+![agreement](/home/haoyunj/biostat-203b-2021-winter/HW2/Agreement.png)
+
 
 ## Q2. `read.csv` (base R) vs `read_csv` (tidyverse) vs `fread` (data.table)
 
@@ -51,14 +50,14 @@ In this homework, we stick to the tidyverse.
 
 ***The `fread` used the least time and the `read.csv` used the longest time.***
 
-```{r eval=FALSE}
-admissionread_csv<- read_csv(str_c(mimic_path, "/core/admissions.csv.gz"))
+```{r,eval=FALSE}
+system.time(read_csv(str_c(mimic_path, "/core/admissions.csv.gz")))
 ```
-```{r eval=FALSE}
-admissionread.csv<- read.csv(str_c(mimic_path, "/core/admissions.csv.gz"))
+```{r,eval=FALSE}
+system.time(read.csv(str_c(mimic_path, "/core/admissions.csv.gz")))
 ```
-```{r eval=FALSE}
-admissionfread<- fread(str_c(mimic_path, "/core/admissions.csv.gz"))
+```{r,eval=FALSE}
+system.time(fread("/usr/203b-data/mimic-iv/core/admissions.csv.gz"))
 ```
 
 ## Q3. ICU stays
@@ -93,9 +92,10 @@ icustays_tble %>%
 3.length of icu stay
 ```{r}
 icustays_tble %>%
-  ggplot(mapping=aes(x = los)) +
-  geom_histogram() +
-  labs(xlabel="length of stay(days)")
+  ggplot(mapping=aes(x = log(los)))+
+  geom_histogram(aes(y=..density..),fill ="orange",colour="yellow") +
+  xlab("length of stay(days)")+
+  ylab("Density of total ICU stay")
 ```
 
 4.first icu unit
@@ -106,7 +106,7 @@ icustays_tble %>%
 ```{r}
 ggplot(data = icustays_tble) + 
   geom_bar(mapping = aes(x = first_careunit,fill = first_careunit))+
-  theme(axis.text.x = element_blank())
+  theme(axis.text.x = element_text(angle=90, vjust=0.5,hjust=1))
 ```
 
 5.last icu unit
@@ -117,7 +117,7 @@ icustays_tble %>%
 ```{r}
 ggplot(data = icustays_tble) + 
   geom_bar(mapping = aes(x = last_careunit, fill = last_careunit))+
-  theme(axis.text.x = element_blank())
+  theme(axis.text.x = element_text(angle=90, vjust=0.5,hjust=1))
 ```
 
 
@@ -152,6 +152,7 @@ admission<- read_csv(str_c(mimic_path, "/core/admissions.csv.gz"))%>%
 ***summarize of the variables related to admission dates***
 ```{r}
 admission %>%
+  distinct(.,subject_id,.keep_all=T)%>%
   mutate(month = month(admittime),
          year = year(admittime),
          weekdays = weekdays(admittime),
@@ -165,15 +166,13 @@ admission.date%>%
 ```
 ```{r}
 ggplot(data = admission.date) + 
-  geom_histogram(mapping = aes(x = year, fill = year))
+  geom_histogram(mapping = aes(x = year, fill ="orange",colour="yellow"))+
+  xlab("Admission year")+
+  ylab("Total count")
 ```
 ```{r}
 ggplot(data = admission.date) + 
-  geom_bar(mapping = aes(x = year, fill = year))
-```
-```{r}
-ggplot(data = admission.date) + 
-  geom_bar(mapping = aes(x = month, fill = month))
+  geom_bar(mapping = aes(x = month, fill ="orange",colour="yellow"))
 ```
 ```{r}
 ggplot(data = admission.date) + 
@@ -181,40 +180,33 @@ ggplot(data = admission.date) +
 ```
 ```{r}
 ggplot(data = admission.date) + 
-  geom_histogram(mapping = aes(x = days, fill = days))
+  geom_bar(mapping = aes(x = days, fill ="orange",colour="yellow"))
 ```
 ```{r}
 ggplot(data = admission.date) + 
-  geom_bar(mapping = aes(x = days, fill = days))
+  geom_bar(mapping = aes(x = hours, fill ="orange",colour="yellow"))
 ```
-```{r}
-ggplot(data = admission.date) + 
-  geom_histogram(mapping = aes(x = hours, fill = hours))
-```
-```{r}
-ggplot(data = admission.date) + 
-  geom_bar(mapping = aes(x = hours, fill = hours))
-```
-***We could find that most admissions occured in the evening(18-24),especially for 0'clock.***
+***We could find that most admissions occured in the evening(18-24),especially for 0'clock. The admissions uniformly distributed among the days,months and years.***
 
 ***number of death in each year***
 using the `deathtime`
 ```{r}
 filter(admission.date,!is.na(dyear))%>%
-  count(year)
-```
-using the `hospital_expire_flag`
-```{r}
-filter(admission,hospital_expire_flag=1)%>%
-  count(hospital_expire_flag)
+  nrow ()
 ```
 
-***admission & discharge location***
+using the `hospital_expire_flag`
+```{r}
+filter(admission.date,hospital_expire_flag==1)%>%
+  count(hospital_expire_flag)
+```
+***We could find that there're 4 missing data in the death time, but we could see more details about the more details from `deathtime`,so we choose this variable to do the analysis.***
+
+***admission & discharge location: We could find that admissions occurred mostly in emergency room and the discharge occured mostly in health care faculty.***
 ```{r}
 ggplot(data = admission.date) + 
   geom_bar(mapping = aes(x = admission_location, fill = admission_location))+
   theme(axis.text.x = element_blank())
-  geom_bar(position="fill")
 ```
 ```{r}
 ggplot(data = admission.date) + 
@@ -222,35 +214,35 @@ ggplot(data = admission.date) +
   theme(axis.text.x = element_blank())
 ```
 
-***admission_type***
+
+***admission_type: We could find that the mostly occurred admission type is 'EW EMER'.***
 ```{r}
 ggplot(data = admission.date) + 
   geom_bar(mapping = aes(x = admission_type, fill = admission_type))+
   theme(axis.text.x = element_blank())
 ```
 
-***insurance***
+***insurance: We could find that the mostly occurred insurance is 'other' and medicare occurred more than medicaid.***
 ```{r}
 ggplot(data = admission.date) + 
   geom_bar(mapping = aes(x = insurance, fill = insurance))+
   theme(axis.text.x = element_blank())
 ```
 
-***language***
+***language: We could find that the mostly occurred language is English.***
 ```{r}
 ggplot(data = admission.date) + 
-  geom_bar(mapping = aes(x = language, fill = language))+
-  theme(axis.text.x = element_blank())
+  geom_bar(mapping = aes(x = language, fill = language))
 ```
 
-***marital_status***
+***marital_status: We could find that the mostly occurred marital status is married.***
 ```{r}
 ggplot(data = admission.date) + 
   geom_bar(mapping = aes(x = marital_status, fill = marital_status))+
   theme(axis.text.x = element_blank())
 ```
 
-***ethnicity***
+***ethnicity: We could find that the mostly occurred ethnicity is White.***
 ```{r}
 ggplot(data = admission.date) + 
   geom_bar(mapping = aes(x = ethnicity, fill = ethnicity))+
@@ -273,7 +265,7 @@ admission %>%
 ***death*** 
 ```{r}
 ggplot(data = admission.date) + 
-  geom_histogram(mapping = aes(x = dyear, fill = dyear))
+  geom_histogram(mapping = aes(x = dyear, fill ="orange",colour="yellow"))
 ```
 
 
@@ -303,7 +295,16 @@ ggplot(data = patient) +
 patient%>%
  count(anchor_age)
 ```
-***Solutions***:From the bar chart,we can figure out that the most patiens has the anchor_age of 0,and there's no anchor_age between 0-18.The ANCHOR_AGE is the age of the patient in the given ANCHOR_YEAR/ANCHOR_YEAR_SHIFTED.
+```{r}
+patient%>%
+ filter(anchor_age!=0 )%>%
+  select(anchor_age)%>%
+  ggplot(aes(x=anchor_age))+
+  geom_histogram(mapping=aes(y=..density..),fill='orange')+
+  geom_density(alpha=0.6)+
+  theme_classic()
+```
+***Solutions***:From the bar chart,we can figure out that the most patiens has the anchor_age of 0,and there's no anchor_age between 0-18.The ANCHOR_AGE is the age of the patient in the given ANCHOR_YEAR/ANCHOR_YEAR_SHIFTED.The '0' might refers to the missing data, so we delete the '0' data and analyzed for the rest.
 
 ## Q6. Lab results
 
@@ -312,19 +313,58 @@ patient%>%
 We are interested in the lab measurements of creatinine, potassium, sodium, chloride, bicarbonate, hematocrit, white blood cell count, glucose, magnesium, calcium, phosphorus, and lactate. Find the `itemid`s of these lab measurements from `d_labitems.csv.gz` and retrieve a subset of `labevents.csv.gz` only containing these items.
 
 First take a look at the data.
+```{r}
+if(!file.exists("labevents_icustays.csv.gz")) {
+  system.time(labevents_tab <-
+    fread(str_c(mimic_path, "/hosp/labevents.csv.gz"),
+          select = c("subject_id", "hadm_id", "itemid",
+                     "charttime", "valuenum"),nThread = 4))
+  labevents_tab %>%
+    semi_join(icustays_tble, by = c("subject_id", "hadm_id")) %>%
+    fwrite("labevents_icustays.csv.gz",nThread = 4)
+}
+system.time(labevents_tab <- fread("labevents_icustays.csv.gz",nThread=4))
+labevents_tab %>%
+  as_tibble() %>%
+  print(width = Inf)
+```
+```{r}
+dlabitems_tble<- read_csv(str_c(mimic_path, "/hosp/d_labitems.csv.gz"))
+```
+```{r}
+labitems <- c("creatinine", "potassium", "sodium", "chloride",
+             "bicarbonate", "hematocrit", "white blood cell",
+             "glucose", "magnesium", "calcium", "lactate")
+itemids <- rep(0, length(labitems))
+i <- 1
+for (labitem in labitems) {
+  print(str_interp("search for ${labitem}"))
+  itemid_list <- dlabitems_tble %>%
+    filter(str_detect(label, regex(labitem, ignore_case = T))) %>%
+    .$itemid
+  itemid <- labevents_tab %>%
+    filter(itemid %in% itemid_list) %>%
+    count(itemid) %>%
+    arrange(desc(n)) %>%
+    slice(1) %>%
+    .$itemid
+  itemids[i] <- itemid
+  i <- i + 1
+}
+```
 
-system(str_c("zcat <",shQuote(str_c(mimic_path, "/hosp/labevents.csv.gz")),
-             "|head"),
-       intern=TRUE)
-
- 
-
-
-
-labevent_sub<-subset(labevents,itemid=50912|50971|50983|50902|50882|
-                      51221|51301|50931|50960|50893|50813)%>%
+```{r}
+labitem_itemid <- tibble(itemid = itemids, labitem = labitems) %>%
+  print(width = Inf)
+```
+```{r}
+labevents_tab<-labevents_tab %>%
+  as_tibble()%>%
+  #keep the items in itemid
+  filter(itemid %in% labitem_itemid$itemid)%>%
+  mutate(charttime=ymd_hms(charttime))%>%
   print(width=Inf)
-
+```
 
 ## Q7. Vitals from chartered events
 
@@ -334,9 +374,52 @@ We are interested in the vitals for ICU patients: heart rate, mean and systolic 
 
 `d_items.csv.gz` (<https://mimic-iv.mit.edu/docs/datasets/icu/d_items/>) is the dictionary for the `ITEMID` in `CHARTEVENTS.csv`. Find potential values of `ITEMID` that correspond to systolic blood pressure, i.e., `LABEL` contains the string `systolic`. 
 
-chartevent<- read_csv(str_c(mimic_path, "/icu/chartevents.csv.gz"))%>%
-  print(width=Inf)
-
+#Gain the itemids
+```{r}
+dchartitems_tble<-read_csv(str_c(mimic_path, "/icu/d_items.csv.gz"))
+```
+```{r}
+chartitems<-c("heart rate","blood pressure","blood pressure",
+              "temperature", "SpO2",  "respiratory rate" )
+for(chartitem in chartitems){
+  print(str_interp("search for ${chartitem}"))
+  dchartitems_tble %>%
+    filter(str_detect(label,regex(chartitem,ignore_case=T)))%>%
+    print(width=Inf)
+}
+```
+#This way took forever to read the file.
+```{r,eval=FALSE}
+if(!file.exists("chartevents_icu.csv.gz")) {
+  system.time(chartevents_tab <-
+    fread(str_c(mimic_path,"/icu/chartevents.csv.gz"),
+          select = c("subject_id", "hadm_id", "itemid",
+                     "charttime", "valuenum"),nThread = 4))
+  chartevents_tab %>%
+    semi_join(icustays_tble, by = c("subject_id", "hadm_id")) %>%
+    fwrite("chartevents_icu.csv.gz",nThread = 4)
+}
+system.time(chartevents_tab <- fread("chartevents_icu.csv.gz",nThread=4))
+chartevents_tab %>%
+  as_tibble() %>%
+  print(width = Inf)
+```
+Gain a smaller one data set.
+```{r}
+system.time(chartevents_tble<- fread("/usr/203b-data/mimic-iv-derived-data/chartevents_filtered_itemid.csv.gz",
+                                     header=FALSE,
+                                     col.names=c("subject_id",
+                                                 "hadm_id",
+                                                 "stay_id",
+                                                 "charttime",
+                                                 "itemid",
+                                                 "valuenum"),
+                                     nThread=4)%>%
+as_tibble()%>%
+mutate_at(c("subject_id","hadm_id","stay_id","itemid"),as.numeric)%>%
+mutate(charttime=ymd_hms(charttime))%>%
+print(width=Inf))
+```
 
 ## Q8. Putting things together
 
@@ -352,3 +435,90 @@ and columns contains at least following variables
 - first lab measurements during ICU stay  
 - first vitals measurement during ICU stay  
 - an indicator variable whether the patient died within 30 days of hospital admission  
+
+
+```{r}
+icustays_uniq_tble <- icustays_tble %>%
+  # take first icu stay of each unique patient 
+  group_by(subject_id) %>%
+  filter(rank(intime)==1)%>%
+  ungroup()%>%
+  #slice_min(intime) %>%
+  # merge admissions table
+  left_join(admission,by=c("subject_id","hadm_id"))%>%
+  # merge
+  left_join(patient, by="subject_id")%>%
+  # only keep adults
+  mutate(age_at_adm =year(admittime)-anchor_year+anchor_age)%>%
+  filter(age_at_adm>=18) %>%
+  print(width=Inf) 
+```
+Merge lab results
+```{r}
+icustays_tble_lab<- labevents_tab%>%
+  semi_join(icustays_uniq_tble,by=c("subject_id","hadm_id"))%>%
+  #plus intime column
+  left_join(select(icustays_uniq_tble,subject_id,hadm_id,intime),
+            by=c("subject_id","hadm_id"))%>%
+  #take the lab items after icu intime
+  filter(charttime>=intime)%>%
+  #group by itemid
+  group_by(subject_id,itemid)%>%
+  #only keep the first charttime
+  arrange(charttime, .by_group=TRUE)%>%
+  slice_head(n=1)%>%
+  #don't need charttime intime
+  select(-charttime,-intime)%>%
+  spread(key=itemid,value=valuenum)%>%
+  #merge with icustays_uniq_tble
+  right_join(icustays_uniq_tble,by=c("subject_id","hadm_id"))%>%
+  ungroup()%>%
+  #name all the labitems
+  rename_at(vars(as.character(labitem_itemid$itemid)),
+            ~labitem_itemid$labitem)%>%
+  print(width=Inf)
+```
+chartevents
+```{r}
+chartevents_uniq_tble <- chartevents_tble %>%
+  select(-stay_id)%>%
+  print(width=Inf) 
+```
+```{r}
+icustays_lab_chart <-chartevents_uniq_tble%>%
+  semi_join(icustays_tble_lab,by=c("subject_id","hadm_id"))%>%
+  #plus intime column
+  left_join(select(icustays_tble_lab,subject_id,hadm_id,intime),
+            by=c("subject_id","hadm_id"))%>%
+  #take the chart items after icu intime
+  filter(charttime>=intime)%>%
+  #group by itemid
+  group_by(subject_id,itemid)%>%
+  #only keep the first charttime
+  arrange(charttime, .by_group=TRUE)%>%
+  slice_head(n=1)%>%
+  #don't need charttime intime
+  select(-charttime,-intime)%>%
+  spread(key=itemid,value=valuenum)%>%
+  #merge with icustays_tble_lab
+  right_join(icustays_tble_lab,by=c("subject_id","hadm_id"))%>%
+  ungroup()%>%
+  print(width=Inf)
+```
+###we could find that since there's no data for the patient to test the Forehead SpO2 Sensor in Place(229862) after entering the icus, so we didn't have the data of SpO2 for icu patients.
+```{r}
+icustays_lab_chart$Dieday<-
+  as.numeric(icustays_lab_chart$deathtime-icustays_lab_chart$admittime)
+icustays_lab_chart$Diein30<-(0<icustays_lab_chart$Dieday&
+                               icustays_lab_chart$Dieday<43200)
+icustays_final<- icustays_lab_chart%>%
+  select(-Dieday)%>%
+  rename(Heartrate = `220045`,abps = `220050`,abpm = `220052`,nbps= `220179`, 
+         nbpm= `220181`,respirationrate =`220210`,temperature_f= `223761`) %>%
+  print(width=Inf)
+```
+
+
+
+
+  
