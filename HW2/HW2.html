@@ -495,7 +495,7 @@ if (str_detect(os, &quot;Linux&quot;)) {
 <h2>Q2. <code>read.csv</code> (base R) vs <code>read_csv</code> (tidyverse) vs <code>fread</code> (data.table)</h2>
 <p>There are quite a few utilities in R for reading data files. Let us test the speed of reading a moderate sized compressed csv file, <code>admissions.csv.gz</code>, by three programs: <code>read.csv</code> in base R, <code>read_csv</code> in tidyverse, and <code>fread</code> in the popular data.table package. Is there any speed difference?</p>
 <p>In this homework, we stick to the tidyverse.</p>
-<p><strong><em>The <code>fread</code> used the least time (5 seconds) and the <code>read.csv</code> used the longest time (47 seconds).</em></strong></p>
+<p><strong><em>The <code>fread</code> used the least time (2-5 seconds) and the <code>read.csv</code> used the longest time (40-47 seconds).</em></strong></p>
 <pre class="r"><code>system.time(read_csv(str_c(mimic_path, &quot;/core/admissions.csv.gz&quot;)))</code></pre>
 <pre><code>## 
 ## ── Column specification ────────────────────────────────────────────────────────
@@ -517,13 +517,13 @@ if (str_detect(os, &quot;Linux&quot;)) {
 ##   hospital_expire_flag = col_double()
 ## )</code></pre>
 <pre><code>##    user  system elapsed 
-##   7.210   0.426  17.176</code></pre>
+##   4.764   0.695   6.308</code></pre>
 <pre class="r"><code>system.time(read.csv(str_c(mimic_path, &quot;/core/admissions.csv.gz&quot;)))</code></pre>
 <pre><code>##    user  system elapsed 
-##  47.851   0.368  49.311</code></pre>
+##  43.704   0.679  44.431</code></pre>
 <pre class="r"><code>system.time(fread(&quot;/usr/203b-data/mimic-iv/core/admissions.csv.gz&quot;))</code></pre>
 <pre><code>##    user  system elapsed 
-##   5.862   0.427   4.931</code></pre>
+##   2.388   0.226   1.684</code></pre>
 </div>
 <div id="q3.-icu-stays" class="section level2">
 <h2>Q3. ICU stays</h2>
@@ -953,7 +953,7 @@ if (str_detect(os, &quot;Linux&quot;)) {
 }
 system.time(labevents_tab &lt;- fread(&quot;labevents_icustays.csv.gz&quot;, nThread = 4))</code></pre>
 <pre><code>##    user  system elapsed 
-##  22.953   2.778  22.834</code></pre>
+##  33.932   3.600  19.414</code></pre>
 <pre class="r"><code>labevents_tab %&gt;%
   as_tibble() %&gt;%
   print(width = Inf)</code></pre>
@@ -1297,7 +1297,7 @@ print(width = Inf))</code></pre>
 ## 10   10003700 28623837 35053963 2165-04-24 06:09:00 220045     55  
 ## # … with 30,095,986 more rows</code></pre>
 <pre><code>##    user  system elapsed 
-##  70.187  10.347  54.330</code></pre>
+##  61.646   6.010  40.608</code></pre>
 </div>
 <div id="q8.-putting-things-together" class="section level2">
 <h2>Q8. Putting things together</h2>

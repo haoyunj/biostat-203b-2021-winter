@@ -48,7 +48,7 @@ There are quite a few utilities in R for reading data files. Let us test the spe
 
 In this homework, we stick to the tidyverse. 
 
-***The `fread` used the least time (5 seconds) and the `read.csv` used the longest time (47 seconds).***
+***The `fread` used the least time (2-5 seconds) and the `read.csv` used the longest time (40-47 seconds).***
 
 ```{r}
 system.time(read_csv(str_c(mimic_path, "/core/admissions.csv.gz")))
