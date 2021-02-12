@@ -598,8 +598,8 @@ sort|uniq -c|tail -n+2</code></pre>
 ##                                  Dload  Upload   Total   Spent    Left  Speed
 ## 
  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
- 2  708k    2 18017    0     0  38153      0  0:00:19 --:--:--  0:00:19 38171
-100  708k  100  708k    0     0   496k      0  0:00:01  0:00:01 --:--:--  496k</code></pre></li>
+22  708k   22  160k    0     0   214k      0  0:00:03 --:--:--  0:00:03  214k
+100  708k  100  708k    0     0   575k      0  0:00:01  0:00:01 --:--:--  576k</code></pre></li>
 </ol>
 <p>Do <strong>not</strong> put this text file <code>pride_and_prejudice.txt</code> in Git. Using a <code>for</code> loop, how would you tabulate the number of times each of the four characters is mentioned?</p>
 <pre><code>```bash
@@ -688,7 +688,7 @@ head -n &quot;$2&quot; &quot;$1&quot; | tail -n &quot;$3&quot;</code></pre>
 ## 24 25 26 27 28 29 30</code></pre>
 <p><code>date</code> displays date of the system:</p>
 <pre class="bash"><code>date</code></pre>
-<pre><code>## Sun Jan 31 03:44:22 UTC 2021</code></pre>
+<pre><code>## Sun Jan 31 04:16:09 UTC 2021</code></pre>
 <p><code>hostname</code> displays the hostname of system:</p>
 <pre class="bash"><code>hostname</code></pre>
 <pre><code>## ucla-biostat-203b</code></pre>
@@ -700,26 +700,24 @@ head -n &quot;$2&quot; &quot;$1&quot; | tail -n &quot;$3&quot;</code></pre>
 <pre><code>## Linux ucla-biostat-203b 3.10.0-1160.6.1.el7.x86_64 #1 SMP Tue Nov 17 13:59:11 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux</code></pre>
 <p><code>uptime</code> displays the uptime,user,load average:</p>
 <pre class="bash"><code>uptime</code></pre>
-<pre><code>##  03:44:22 up 27 days,  5:55,  2 users,  load average: 0.47, 0.17, 0.08</code></pre>
+<pre><code>##  04:16:09 up 27 days,  6:27,  1 user,  load average: 0.62, 0.21, 0.10</code></pre>
 <p><code>who am i</code> displays he username of the current user when this command is invoked:</p>
 <pre class="bash"><code>whoami</code></pre>
 <pre><code>## haoyunj</code></pre>
 <p><code>who</code> displays the users that are currently logged into your Unix computer system:</p>
 <pre class="bash"><code>who</code></pre>
-<pre><code>## filipovicmilan271 pts/7        2021-01-21 06:03 (110.3.236.35.bc.googleusercontent.com)
-## haoyunj  pts/9        2021-01-31 03:31 (101.88.75.10)</code></pre>
+<pre><code>## filipovicmilan271 pts/7        2021-01-21 06:03 (110.3.236.35.bc.googleusercontent.com)</code></pre>
 <p><code>w</code> displays uptime,user who has logged in and their information :</p>
 <pre class="bash"><code>w</code></pre>
-<pre><code>##  03:44:22 up 27 days,  5:55,  2 users,  load average: 0.47, 0.17, 0.08
+<pre><code>##  04:16:09 up 27 days,  6:27,  1 user,  load average: 0.62, 0.21, 0.10
 ## USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
-## filipovi pts/7    110.3.236.35.bc. 21Jan21  9days  0.06s  0.06s -bash
-## haoyunj  pts/9    101.88.75.10     03:31    9:26   0.05s  0.05s -bash</code></pre>
+## filipovi pts/7    110.3.236.35.bc. 21Jan21  9days  0.06s  0.06s -bash</code></pre>
 <p><code>id</code> displays the uid,gid,groups,context:</p>
 <pre class="bash"><code>id</code></pre>
 <pre><code>## uid=1016(haoyunj) gid=1018(haoyunj) groups=1018(haoyunj) context=system_u:system_r:initrc_t:s0</code></pre>
 <p><code>last | head</code> displays the latest 10 logged user and their information:</p>
 <pre class="bash"><code>last | head</code></pre>
-<pre><code>## haoyunj  pts/9        101.88.75.10     Sun Jan 31 03:31   still logged in   
+<pre><code>## haoyunj  pts/9        101.88.75.10     Sun Jan 31 03:31 - 03:58  (00:27)    
 ## jihcai   pts/4        ip68-6-101-100.s Sun Jan 31 01:27 - 01:50  (00:22)    
 ## jihcai   pts/4        ip68-6-101-100.s Sat Jan 30 22:31 - 22:55  (00:23)    
 ## jihcai   pts/4        ip68-6-101-100.s Sat Jan 30 21:42 - 22:13  (00:31)    
@@ -735,7 +733,7 @@ head -n &quot;$2&quot; &quot;$1&quot; | tail -n &quot;$3&quot;</code></pre>
 <p><code>time sleep 5</code> displays the time used for real,user,sys to sleep 5 seconds:</p>
 <pre class="bash"><code>time sleep 5</code></pre>
 <pre><code>## 
-## real 0m5.004s
+## real 0m5.002s
 ## user 0m0.000s
 ## sys  0m0.002s</code></pre>
 <p><code>history | tail</code> displays the history of commands:</p>
