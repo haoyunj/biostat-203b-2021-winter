@@ -11,3 +11,20 @@ hello, world
 hello, world
 hello, world
 hello, world
+<<<<<<< HEAD
+=======
+hello, world
+hello, world
+hello, world
+hello, world
+hello, world
+hello, world
+hello, world
+hello, world
+hello, world
+hello, world
+hello, world
+hello, world
+hello, world
+hello, world
+>>>>>>> 94bd42b4b4763460666ebd1c2a252b85da8a9c0c

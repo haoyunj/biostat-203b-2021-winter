@@ -598,8 +598,13 @@ sort|uniq -c|tail -n+2</code></pre>
 ##                                  Dload  Upload   Total   Spent    Left  Speed
 ## 
  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+<<<<<<< HEAD
 22  708k   22  160k    0     0   214k      0  0:00:03 --:--:--  0:00:03  214k
 100  708k  100  708k    0     0   575k      0  0:00:01  0:00:01 --:--:--  576k</code></pre></li>
+=======
+19  708k   19  137k    0     0   170k      0  0:00:04 --:--:--  0:00:04  170k
+100  708k  100  708k    0     0   525k      0  0:00:01  0:00:01 --:--:--  526k</code></pre></li>
+>>>>>>> 94bd42b4b4763460666ebd1c2a252b85da8a9c0c
 </ol>
 <p>Do <strong>not</strong> put this text file <code>pride_and_prejudice.txt</code> in Git. Using a <code>for</code> loop, how would you tabulate the number of times each of the four characters is mentioned?</p>
 <pre><code>```bash
@@ -688,7 +693,11 @@ head -n &quot;$2&quot; &quot;$1&quot; | tail -n &quot;$3&quot;</code></pre>
 ## 24 25 26 27 28 29 30</code></pre>
 <p><code>date</code> displays date of the system:</p>
 <pre class="bash"><code>date</code></pre>
+<<<<<<< HEAD
 <pre><code>## Sun Jan 31 04:16:09 UTC 2021</code></pre>
+=======
+<pre><code>## Fri Jan 29 02:46:04 UTC 2021</code></pre>
+>>>>>>> 94bd42b4b4763460666ebd1c2a252b85da8a9c0c
 <p><code>hostname</code> displays the hostname of system:</p>
 <pre class="bash"><code>hostname</code></pre>
 <pre><code>## ucla-biostat-203b</code></pre>
@@ -700,23 +709,41 @@ head -n &quot;$2&quot; &quot;$1&quot; | tail -n &quot;$3&quot;</code></pre>
 <pre><code>## Linux ucla-biostat-203b 3.10.0-1160.6.1.el7.x86_64 #1 SMP Tue Nov 17 13:59:11 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux</code></pre>
 <p><code>uptime</code> displays the uptime,user,load average:</p>
 <pre class="bash"><code>uptime</code></pre>
+<<<<<<< HEAD
 <pre><code>##  04:16:09 up 27 days,  6:27,  1 user,  load average: 0.62, 0.21, 0.10</code></pre>
+=======
+<pre><code>##  02:46:04 up 25 days,  4:57,  3 users,  load average: 0.85, 0.63, 0.54</code></pre>
+>>>>>>> 94bd42b4b4763460666ebd1c2a252b85da8a9c0c
 <p><code>who am i</code> displays he username of the current user when this command is invoked:</p>
 <pre class="bash"><code>whoami</code></pre>
 <pre><code>## haoyunj</code></pre>
 <p><code>who</code> displays the users that are currently logged into your Unix computer system:</p>
 <pre class="bash"><code>who</code></pre>
+<<<<<<< HEAD
 <pre><code>## filipovicmilan271 pts/7        2021-01-21 06:03 (110.3.236.35.bc.googleusercontent.com)</code></pre>
 <p><code>w</code> displays uptime,user who has logged in and their information :</p>
 <pre class="bash"><code>w</code></pre>
 <pre><code>##  04:16:09 up 27 days,  6:27,  1 user,  load average: 0.62, 0.21, 0.10
 ## USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
 ## filipovi pts/7    110.3.236.35.bc. 21Jan21  9days  0.06s  0.06s -bash</code></pre>
+=======
+<pre><code>## filipovicmilan271 pts/7        2021-01-21 06:03 (110.3.236.35.bc.googleusercontent.com)
+## liqiao93 pts/8        2021-01-29 02:30 (cpe-75-82-206-158.socal.res.rr.com)
+## wzdbruins318 pts/10       2021-01-29 02:39 (112.32.12.252)</code></pre>
+<p><code>w</code> displays uptime,user who has logged in and their information :</p>
+<pre class="bash"><code>w</code></pre>
+<pre><code>##  02:46:04 up 25 days,  4:57,  3 users,  load average: 0.85, 0.63, 0.54
+## USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+## filipovi pts/7    110.3.236.35.bc. 21Jan21  7days  0.06s  0.06s -bash
+## liqiao93 pts/8    cpe-75-82-206-15 02:30    4.00s  0.09s  0.07s -bash
+## wzdbruin pts/10   112.32.12.252    02:39   12.00s  0.05s  0.05s -bash</code></pre>
+>>>>>>> 94bd42b4b4763460666ebd1c2a252b85da8a9c0c
 <p><code>id</code> displays the uid,gid,groups,context:</p>
 <pre class="bash"><code>id</code></pre>
 <pre><code>## uid=1016(haoyunj) gid=1018(haoyunj) groups=1018(haoyunj) context=system_u:system_r:initrc_t:s0</code></pre>
 <p><code>last | head</code> displays the latest 10 logged user and their information:</p>
 <pre class="bash"><code>last | head</code></pre>
+<<<<<<< HEAD
 <pre><code>## haoyunj  pts/9        101.88.75.10     Sun Jan 31 03:31 - 03:58  (00:27)    
 ## jihcai   pts/4        ip68-6-101-100.s Sun Jan 31 01:27 - 01:50  (00:22)    
 ## jihcai   pts/4        ip68-6-101-100.s Sat Jan 30 22:31 - 22:55  (00:23)    
@@ -727,6 +754,18 @@ head -n &quot;$2&quot; &quot;$1&quot; | tail -n &quot;$3&quot;</code></pre>
 ## zhaofan1 pts/4        cpe-76-91-16-146 Sat Jan 30 03:30 - 03:38  (00:07)    
 ## zhaofan1 pts/4        cpe-76-91-16-146 Sat Jan 30 03:10 - 03:25  (00:14)    
 ## hunanzho pts/8        47.145.202.194   Fri Jan 29 05:42 - 06:03  (00:21)</code></pre>
+=======
+<pre><code>## wzdbruin pts/10       112.32.12.252    Fri Jan 29 02:39   still logged in   
+## liqiao93 pts/8        cpe-75-82-206-15 Fri Jan 29 02:30   still logged in   
+## wzdbruin pts/10       112.32.12.252    Fri Jan 29 02:28 - 02:37  (00:09)    
+## liqiao93 pts/8        cpe-75-82-206-15 Fri Jan 29 02:24 - 02:30  (00:05)    
+## zhaofan1 pts/8        cpe-76-91-16-146 Fri Jan 29 01:47 - 01:52  (00:04)    
+## zhaofan1 pts/10       cpe-76-91-16-146 Fri Jan 29 01:44 - 01:47  (00:02)    
+## zhaofan1 pts/10       cpe-76-91-16-146 Fri Jan 29 01:43 - 01:43  (00:00)    
+## zhaofan1 pts/10       cpe-76-91-16-146 Fri Jan 29 01:27 - 01:31  (00:03)    
+## germc3   pts/24       cpe-172-117-252- Fri Jan 29 00:57 - 02:30  (01:33)    
+## linyuzho pts/23       s-169-232-70-230 Fri Jan 29 00:46 - 01:31  (00:44)</code></pre>
+>>>>>>> 94bd42b4b4763460666ebd1c2a252b85da8a9c0c
 <p><code>echo {con,pre}{sent,fer}{s,ed}</code> displays different combinations of the part of the words:</p>
 <pre class="bash"><code>echo {con,pre}{sent,fer}{s,ed}</code></pre>
 <pre><code>## consents consented confers confered presents presented prefers prefered</code></pre>
