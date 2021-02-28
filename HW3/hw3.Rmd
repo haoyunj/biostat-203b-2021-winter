@@ -135,15 +135,15 @@ if (!dir.exists("mimiciv_shiny")) {
 icustays_tble %>%
   group_by(subject_id) %>%
   filter(rank(intime) == 1) %>%
+  ungroup() %>%
   left_join(admissions_tble, by = c("subject_id", "hadm_id")) %>%
   left_join(patients_tble, by = "subject_id") %>%
   mutate(age_at_adm = year(admittime) - anchor_year + anchor_age) %>%
   filter(age_at_adm >= 18) %>%
-  left_join(labevents_tble, by = "subject_id","hadm_id") %>%
-  left_join(chartevents_tble, by = "subject_id","hadm_id") %>%
-  ungroup() %>%
+  left_join(labevents_tble, by = c("subject_id", "hadm_id")) %>%
+  left_join(chartevents_tble, by = c("subject_id", "hadm_id", "stay_id")) %>%
   show_query() %>%
-  as_tibble() %>%
+  collect() %>%
   mutate(deathin30 = ifelse(is.na(deathtime) == TRUE, "No",
                       ifelse(deathtime - admittime <= 43200, "Yes", "No"))) %>%
   print(width = Inf) %>%
