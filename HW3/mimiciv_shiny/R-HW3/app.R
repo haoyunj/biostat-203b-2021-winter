@@ -1,48 +1,74 @@
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
-
 library(shiny)
+
+library(tidyverse)
+
+icu <- readRDS("/home/haoyunj/biostat-203b-2021-winter/HW3/mimiciv_shiny/icu_cohort.rds")
+# ggplot(data = icu, aes_string(x = ")) + 
+#     geom_bar()
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
-
-    # Application title
-    titlePanel("Old Faithful Geyser Data"),
-
-    # Sidebar with a slider input for number of bins 
-    sidebarLayout(
-        sidebarPanel(
-            sliderInput("bins",
-                        "Number of bins:",
-                        min = 1,
-                        max = 50,
-                        value = 30)
-        ),
-
-        # Show a plot of the generated distribution
-        mainPanel(
-           plotOutput("distPlot")
-        )
+  
+  titlePanel("ICU_cohort"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      helpText("Select a item to show the graphic and numeraic information"),
+      selectInput("var",label = "Choose a variable type:",
+                  choices = c("Demographic", "Lab measurement","Vitals")), 
+      
+      uiOutput("typeChanged")
+      
+    ),
+    
+    mainPanel(
+      plotOutput("plot")
+      
+      
     )
+  )
 )
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-
-    output$distPlot <- renderPlot({
-        # generate bins based on input$bins from ui.R
-        x    <- faithful[, 2]
-        bins <- seq(min(x), max(x), length.out = input$bins + 1)
-
-        # draw the histogram with the specified number of bins
-        hist(x, breaks = bins, col = 'darkgray', border = 'white')
-    })
+  
+  
+  output$typeChanged <- renderUI({
+    
+    if(input$var == "Demographic") {
+      selectInput("varselected",label = "Choose a variable to display:",
+                  choices = c('insurance', 'language', 'marital_status', 
+                              'ethnicity', 'gender', 'age_at_adm',
+                              'first_careunit ', 'last_careunit '))
+    } else if(input$var == "Lab measurement") {
+      selectInput("varselected",label = "Choose a variable to display:",
+                  choices = c("bicarbonate", "calcium", " chloride creatinine",
+                              "glucose",  "magnesium", "potassium",
+                              "sodium", "hematocrit", "wbc", "lactate",
+                    "heart_rate", "arterial_blood_pressure_systolic",
+                              "arterial_blood_pressure_mean",
+                              "non_invasive_blood_pressure_systolic", 
+                              "non_invasive_blood_pressure_mean"
+                              
+                              
+                              
+                              
+                  ))
+    } else { # Vitals
+      selectInput("varselected",label = "Choose a variable to display:",
+                  choices = c("deathin30"))
+    }
+    
+  })
+  
+  output$plot <- renderPlot({
+    
+    var = input$varselected
+    
+    ggplot(data = icu, mapping = aes_string(x = var, fill = var)) + 
+      geom_bar()+
+      theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+  })
 }
 
 # Run the application 
