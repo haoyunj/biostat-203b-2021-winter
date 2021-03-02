@@ -133,17 +133,22 @@ if (!dir.exists("mimiciv_shiny")) {
 
 ```{r}
 icustays_tble %>%
+  # take first icu stay of each unique patient
   group_by(subject_id) %>%
   filter(rank(intime) == 1) %>%
   ungroup() %>%
+  # merge
   left_join(admissions_tble, by = c("subject_id", "hadm_id")) %>%
   left_join(patients_tble, by = "subject_id") %>%
+  # keep adults
   mutate(age_at_adm = year(admittime) - anchor_year + anchor_age) %>%
   filter(age_at_adm >= 18) %>%
+  # merge
   left_join(labevents_tble, by = c("subject_id", "hadm_id")) %>%
   left_join(chartevents_tble, by = c("subject_id", "hadm_id", "stay_id")) %>%
   show_query() %>%
   collect() %>%
+  # create variables
   mutate(deathin30 = ifelse(is.na(deathtime) == TRUE, "No",
                       ifelse(deathtime - admittime <= 43200, "Yes", "No"))) %>%
   print(width = Inf) %>%

@@ -828,17 +828,22 @@ if (!dir.exists(&quot;mimiciv_shiny&quot;)) {
   dir.create(&quot;mimiciv_shiny&quot;)
 }</code></pre>
 <pre class="r"><code>icustays_tble %&gt;%
+  # take first icu stay of each unique patient
   group_by(subject_id) %&gt;%
   filter(rank(intime) == 1) %&gt;%
   ungroup() %&gt;%
+  # merge
   left_join(admissions_tble, by = c(&quot;subject_id&quot;, &quot;hadm_id&quot;)) %&gt;%
   left_join(patients_tble, by = &quot;subject_id&quot;) %&gt;%
+  # keep adults
   mutate(age_at_adm = year(admittime) - anchor_year + anchor_age) %&gt;%
   filter(age_at_adm &gt;= 18) %&gt;%
+  # merge
   left_join(labevents_tble, by = c(&quot;subject_id&quot;, &quot;hadm_id&quot;)) %&gt;%
   left_join(chartevents_tble, by = c(&quot;subject_id&quot;, &quot;hadm_id&quot;, &quot;stay_id&quot;)) %&gt;%
   show_query() %&gt;%
   collect() %&gt;%
+  # create variables
   mutate(deathin30 = ifelse(is.na(deathtime) == TRUE, &quot;No&quot;,
                       ifelse(deathtime - admittime &lt;= 43200, &quot;Yes&quot;, &quot;No&quot;))) %&gt;%
   print(width = Inf) %&gt;%
