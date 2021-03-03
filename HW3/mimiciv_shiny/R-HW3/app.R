@@ -1,7 +1,7 @@
 library(shiny)
 
 library(tidyverse)
-icu<- icu_cohort
+icu <- icu_cohort
 
 # ggplot(data = icu, aes_string(x = ")) + 
 #     geom_bar()
