@@ -1,12 +1,11 @@
 library(shiny)
 
 library(tidyverse)
-icu <- icu_cohort
-
+icu <- readRDS("./data/icu_cohort.rds")
 # ggplot(data = icu, aes_string(x = ")) + 
-#     geom_bar()
-
-# Define UI for application that draws a histogram
+  #     geom_bar()
+  
+  # Define UI for application that draws a histogram
 ui <- fluidPage(
   
   titlePanel("ICU_cohort"),
@@ -56,7 +55,7 @@ server <- function(input, output) {
     } else if(input$var == "Lab measurement") {
       selectInput("varselected", label = "Choose a variable to display:",
                   choices = c("bicarbonate", "calcium", "chloride", 
-                              "creatinine", "glucose",  "magnesium", "potassium",
+                              "creatinine", "glucose", "magnesium", "potassium",
                               "sodium", "hematocrit", "wbc", "lactate"
                               
                   ))
