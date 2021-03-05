@@ -1,5 +1,6 @@
+#install.packages("tableone")
 library(shiny)
-
+library(tableone)
 library(tidyverse)
 icu <- readRDS("./data/icu_cohort.rds")
 # ggplot(data = icu, aes_string(x = ")) + 
@@ -8,14 +9,16 @@ icu <- readRDS("./data/icu_cohort.rds")
   # Define UI for application that draws a histogram
 ui <- fluidPage(
   
-  titlePanel("ICU_cohort"),
+  titlePanel("MIMIC-IV ICU Stays Data Explorer"),
   
   sidebarLayout(
     sidebarPanel(
-      helpText("Select a item to show the graphic and numeraic information.",
+      helpText("Select a item to show the summary of the data and number of
+               missing values.",
                "Bar charts for characteristic variables.",
-               "Show histograms with a red line indicated for the mean 
-               and analysis table for non-characteristic variables.",
+               "Boxplot and histograms with a red line indicated for the mean 
+               and analysis table for numeric and non-characteristic variables."
+               ,
                "Select bins for histograms."
                ),
       selectInput("var", label = "Choose a variable type:",
@@ -32,8 +35,10 @@ ui <- fluidPage(
     ),
     
     mainPanel(
+      verbatimTextOutput("summary"),
       plotOutput("plot"),
-      verbatimTextOutput("summary")
+      plotOutput("boxplot")
+     
       
     )
   )
@@ -51,7 +56,8 @@ server <- function(input, output) {
                               "ethnicity", "gender", "age_at_adm",
                               "first_careunit", "last_careunit", "los",
                               "intime", "outtime", "admittime", "dischtime", 
-                              "deathtime", "admission_type"))
+                              "deathtime", "admission_type", 
+                              "admission_location", "discharge_location"))
     } else if(input$var == "Lab measurement") {
       selectInput("varselected", label = "Choose a variable to display:",
                   choices = c("bicarbonate", "calcium", "chloride", 
@@ -73,7 +79,7 @@ server <- function(input, output) {
     
     var <- input$varselected
     if(is.null(var)) return(NULL)
-    varClass = eval(substitute(class(icu$var)))
+    varClass <- eval(substitute(class(icu$var)))
     
     if(varClass == "character") {
       ggplot(data = icu, mapping = aes_string(x = var)) + 
@@ -93,11 +99,39 @@ server <- function(input, output) {
     }
       
   })
-  output$summary <- renderPrint({
-    var = input$varselected
-    icu %>% 
-      select(var) %>%
-      summary() })
+  
+  output$boxplot <- renderPlot({
+    
+    var <- input$varselected
+    if(is.null(var)) return(NULL)
+    varClass = eval(substitute(class(icu$var)))
+    
+    if (varClass == "numeric") {
+      ggplot(data = icu, mapping = aes_string(x = var)) + 
+        geom_boxplot() +
+        theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+    } else {
+      NULL
+    }
+    
+  })
+
+
+    output$summary <- renderPrint({
+      
+      
+      var = input$varselected
+      
+      
+      if(is.null(var)) return(NULL)
+      varClass = eval(substitute(class(icu$var)))
+      
+      
+      tableOne<- CreateTableOne(vars = var,   data = icu)
+      summary(tableOne, showAllLevels = TRUE, missing = TRUE)
+    
+  })
+
 }
 
 # Run the application 
