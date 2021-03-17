@@ -1,0 +1,322 @@
+---
+title: "Biostat 203B Homework 4 (Draft)"
+subtitle: Due Mar 12 @ 11:59PM
+output:
+  html_document:
+    toc: true
+    toc_depth: 4
+  # ioslides_presentation: default
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(cache = TRUE, warning = FALSE, 
+                      message = FALSE, cache.lazy = FALSE)
+```
+                      
+Display machine information:
+```{r}
+sessionInfo()
+```
+Load database libraries and the tidyverse frontend:
+```{r}
+library(tidyverse)
+library(lubridate)
+library(miceRanger)
+library(mice)
+library(fastDummies)
+```
+
+## Q1. Missing data
+
+Through the Shiny app developed in HW3, we observe abundant missing values in the MIMIC-IV ICU cohort we created. In this question, we use multiple imputation to obtain a data set without missing values.
+
+0. Read following tutorials on the R package miceRanger for imputation: <https://github.com/farrellday/miceRanger>, <https://cran.r-project.org/web/packages/miceRanger/vignettes/miceAlgorithm.html>.
+
+    A more thorough book treatment of the practical imputation strategies is the book [*_Flexible Imputation of Missing Data_*](https://stefvanbuuren.name/fimd/) by Stef van Buuren. 
+
+1. Explain the jargon MCAR, MAR, and MNAR.
+
+If the probability of being missing is the same for all cases, then the data are said to be missing completely at random (MCAR).
+If the probability of being missing is the same only within groups defined by the observed data, then the data are missing at random (MAR)
+If neither MCAR nor MAR holds, then we speak of missing not at random (MNAR). In the literature one can also find the term NMAR (not missing at random) for the same concept. 
+
+2. Explain in a couple of sentences how the Multiple Imputation by Chained Equations (MICE) work.
+
+Step 1: A simple imputation, such as imputing the mean, is performed for every missing value in the dataset. These mean imputations can be thought of as “place holders.”
+
+Step 2: The “place holder” mean imputations for one variable (“var”) are set back to missing.
+
+Step 3: The observed values from the variable “var” in Step 2 are regressed on the other variables in the imputation model, which may or may not consist of all of the variables in the dataset. 
+
+Step 4: The missing values for “var” are then replaced with predictions (imputations) from the regression model. 
+
+Step 5: Steps 2–4 are then repeated for each variable that has missing data.
+
+Step 6: Steps 2–4 are repeated for a number of cycles, with the imputations being updated at each cycle.
+
+
+3. Perform a data quality check of the ICU stays data. Discard variables with substantial missingness, say >5000 `NA`s. Replace apparent data entry errors by `NA`s.
+```{r}
+library(naniar)
+```
+
+```{r}
+require(miceRanger)
+set.seed(1)
+
+# Load data
+icu <- readRDS("./icu_cohort-2.rds")
+
+ icu %>%
+   gg_miss_var()
+ 
+ icu %>%
+   select(-dod, -deathtime, -arterial_blood_pressure_systolic, 
+          -arterial_blood_pressure_mean, -lactate, -edregtime, -edouttime) %>%
+   print(width = Inf) -> icu_s
+```
+```{r, eval = FALSE}
+#We could find there're enter errors in non_invasive_blood_pressure_systolic &
+#non_invasive_blood_pressure_mean.
+sort(icu$non_invasive_blood_pressure_systolic,decreasing = TRUE)
+sort(icu$non_invasive_blood_pressure_mean,decreasing = TRUE)
+#The non_invasive_blood_pressure_systolic has enter error for 12262 and non_invasive_blood_pressure_mean has enter errors as 140119 120130 6116 936 . 
+#Replace them as NA.
+```
+
+```{r}
+icu_s$non_invasive_blood_pressure_systolic <- replace(icu_s$non_invasive_blood_pressure_systolic,
+        icu_s$non_invasive_blood_pressure_systolic == 12262, NA)
+icu_s$non_invasive_blood_pressure_mean <- 
+  replace(icu_s$non_invasive_blood_pressure_mean,
+        icu_s$non_invasive_blood_pressure_mean == 140119, NA)
+icu_s$non_invasive_blood_pressure_mean <- 
+  replace(icu_s$non_invasive_blood_pressure_mean,
+        icu_s$non_invasive_blood_pressure_mean == 120130, NA)
+```
+```{r}
+icu_s$non_invasive_blood_pressure_mean <- 
+  replace(icu_s$non_invasive_blood_pressure_mean,
+        icu_s$non_invasive_blood_pressure_mean == 6116, NA)
+icu_s$non_invasive_blood_pressure_mean <- 
+  replace(icu_s$non_invasive_blood_pressure_mean,
+        icu_s$non_invasive_blood_pressure_mean == 936, NA)
+```
+```{r, eval = FALSE}
+sort(icu_s$non_invasive_blood_pressure_systolic,decreasing = TRUE)
+sort(icu_s$non_invasive_blood_pressure_mean,decreasing = TRUE)
+```
+```{r}
+icu_s %>%
+  select(gender, ethnicity, marital_status, los, age_at_adm, bicarbonate, 
+         calcium, chloride, creatinine, glucose,
+         magnesium, potassium, sodium, hematocrit, wbc, heart_rate,
+         non_invasive_blood_pressure_systolic, non_invasive_blood_pressure_mean,
+         respiratory_rate, temperature_fahrenheit, deathin30) -> icu_snew
+```
+## Choose all the variables except the date variables for prediction.
+
+4. Impute missing values by `miceRanger` (request $m=3$ datasets). This step is very computational intensive. Make sure to save the imputation results as a file.
+```{r, eval = FALSE}
+# Perform mice, return 6 datasets. 
+require(miceRanger)
+set.seed(1)
+seqTime <- system.time(
+  miceObj <- miceRanger(
+      icu_snew
+    , m=3
+    , returnModels = TRUE
+    , verbose = FALSE
+    , max.depth = 10
+  )
+)
+```
+
+```{r, eval = FALSE}
+miceObj %>%
+  saveRDS(str_c("./miceObj.rds"))
+```
+```{r}
+miceObj <- readRDS("./miceObj.rds")
+```
+```{r}
+miceObj 
+```
+
+5. Make imputation diagnostic plots and explain what they mean.
+```{r}
+plotDistributions(miceObj, vars = 'allNumeric')
+```
+
+The red line is the density of the original, nonmissing data. The smaller, black lines are the density of the imputed values in each of the datasets. We could find for the variable "bicarbonate", "chloride", "potassium", "hematocrit", "heart_rate", "non_invasive_blood_pressure_systolic", "non_invasive_blood_pressure_mean", "respiratory_rate", the black lines and red lines don't match up, it ,means the data was not MCAR.
+```{r}
+plotCorrelations(miceObj)
+```
+
+The Correlation plot shows a boxplot of the correlations between imputed values in every combination of datasets, at each iteration.
+```{r}
+plotVarConvergence(miceObj, vars = 'allNumeric')
+```
+
+Center and Dispersion Convergence plot shows that the process covered the true theoretical mean.
+
+```{r}
+plotModelError(miceObj, vars = 'allNumeric')
+```
+
+The Model OOB Error shows the the OOB accuracy for classification, and r-squared for regression. We could find most of the error is in the reasonable range.
+```{r}
+plotVarImportance(miceObj)
+```
+
+Variable Importance shows the importance of each variable.
+
+```{r}
+plotImputationVariance(miceObj, ncol = 2, widths = c(5, 3))
+```
+
+In the Imputed Variance Between Datasets,the standard deviation of the imputed values is calculated for each sample. This is then compared to the total population standard deviation. Percentage of the samples with a SD below the population SD is shaded in the densities above, and the Quantile is shown in the title. 
+
+6. Obtain a complete data set by averaging the 3 imputed data sets.
+```{r}
+dataList <- completeData(miceObj)
+head(dataList[[1]], 10)
+```
+```{r , eval = FALSE}
+dataList %>%
+  saveRDS(str_c("./dataList.rds"))
+```
+```{r}
+ dummy_cols(dataList[1],
+           remove_first_dummy = TRUE,
+           remove_selected_columns = TRUE) -> data.1
+```
+```{r}
+ dummy_cols(dataList[2],
+           remove_first_dummy = TRUE,
+           remove_selected_columns = TRUE) -> data.2
+```
+```{r}
+ dummy_cols(dataList[3],
+           remove_first_dummy = TRUE,
+           remove_selected_columns = TRUE) -> data.3
+```
+```{r}
+data <- (data.1 + data.2 + data.3) / 3
+```
+```{r, eval = FALSE}
+data %>%
+  saveRDS(str_c("./data.rds"))
+```
+
+## Q2. Predicting 30-day mortality
+
+Develop at least two analytic approaches for predicting the 30-day mortality of patients admitted to ICU using demographic information (gender, age, marital status, ethnicity), first lab measurements during ICU stay, and first vital measurements during ICU stay. For example, you can use (1) logistic regression (`glm()` function), (2) logistic regression with lasso penalty (glmnet package), (3) random forest (randomForest package), or (4) neural network.
+
+1. Partition data into 80% training set and 20% test set. Stratify partitioning according the 30-day mortality status.
+
+```{r, eval = FALSE}
+library(dplyr)
+train <- sample_frac(data, 0.8)
+sid <- as.numeric(rownames(train)) # because rownames() returns character
+test <- data[-sid, ]
+```
+```{r, eval = FALSE}
+train %>%
+  saveRDS(str_c("./train.rds"))
+```
+```{r, eval = FALSE}
+test %>%
+  saveRDS(str_c("./test.rds"))
+```
+```{r}
+train <- readRDS("./train.rds")
+```
+```{r}
+test <- readRDS("./test.rds")
+```
+```{r}
+names(train)[names(train) ==
+               ".data.Dataset_1.ethnicity_BLACK/AFRICAN AMERICAN"] <- "ethnicity_black_africanamerican"
+names(test)[names(test) == 
+              ".data.Dataset_1.ethnicity_BLACK/AFRICAN AMERICAN"] <- "ethnicity_black_africanamerican"
+names(train)[names(train) ==
+               ".data.Dataset_1.ethnicity_HISPANIC/LATINO"] <- "ethnicity_hisl"
+names(test)[names(test) == 
+              ".data.Dataset_1.ethnicity_HISPANIC/LATINO"] <- "ethnicity_hisl"
+names(train)[names(train) ==
+               ".data.Dataset_1.ethnicity_UNABLE TO OBTAIN"] <- "ethnicity_un"
+names(test)[names(test) == 
+              ".data.Dataset_1.ethnicity_UNABLE TO OBTAIN"] <- "ethnicity_un"
+
+```
+## 1.USING GLM
+1.2. Train the models using the training set.
+```{r}
+logistic <- glm(train$.data.Dataset_1.deathin30_Yes~.  
+                  ,  binomial(link='logit'), data = train)
+```
+```{r}
+summary(logistic)
+```
+
+1.3. Compare model prediction performance on the test set.
+```{r}
+test$logistic_prob <- predict(logistic, test, type = "response")
+length(test$logistic_prob)
+```
+```{r}
+test <- test  %>% 
+  mutate(model_pred = (logistic_prob > .95) ,
+                          death = .data.Dataset_1.deathin30_Yes )
+```
+```{r}
+test <- test %>% mutate(accurate = 1*(model_pred == death))
+sum (test$accurate) / nrow(test)
+```
+## 2.USING RANDOM FOREST
+2.2. Train the models using the training set.
+```{r}
+library(randomForest)
+```
+
+
+```{r}
+train$.data.Dataset_1.deathin30_Yes <- 
+  as.character(train$.data.Dataset_1.deathin30_Yes)
+train$.data.Dataset_1.deathin30_Yes <- 
+  as.factor(train$.data.Dataset_1.deathin30_Yes)
+rf <- randomForest(formula = train$.data.Dataset_1.deathin30_Yes ~.
+            , ntree = 10, nodesize = 5, data = train,
+             importance = TRUE, proximity = TRUE)
+```
+
+2.3. Compare model prediction performance on the test set.
+```{r}
+test_matrix = table(predict(rf, test), test$.data.Dataset_1.deathin30_Yes)
+sum(diag(test_matrix)) / sum(test_matrix)
+```
+```{r}
+summary(rf)
+```
+
+
+```{r}
+train$.data.Dataset_1.deathin30_Yes <- 
+  as.character(train$.data.Dataset_1.deathin30_Yes)
+train$.data.Dataset_1.deathin30_Yes <- 
+  as.factor(train$.data.Dataset_1.deathin30_Yes)
+rf2 <- randomForest(formula = train$.data.Dataset_1.deathin30_Yes ~.
+            , ntree = 20, nodesize = 5, data = train,
+             importance = TRUE, proximity = TRUE)
+```
+
+```{r}
+test_matrix = table(predict(rf2, test), test$.data.Dataset_1.deathin30_Yes)
+sum(diag(test_matrix)) / sum(test_matrix)
+```
+```{r}
+summary(rf2)
+```
+
+### We could find the random forest with more tree numbers have higher accuracy.
